@@ -124,10 +124,10 @@ class PopupApp extends React.Component<
 
     render () {
         return <>
-            { this.state.isLoading
-                ? <LoadingIndicator text={ _("popupLoading") } />
-                : (
-                    <div className="connection">
+            <div className="connection">
+                { this.state.isLoading
+                    ? <LoadingIndicator text={ _("popupLoading") } />
+                    : <>
                         <div className={`connection__status ${
                                 this.state.proxy?.isConnected
                                     ? "connection__status--connected"
@@ -147,7 +147,8 @@ class PopupApp extends React.Component<
                         <div className="connection__country">
                             { this.state.connectionDetails?.country }
                         </div>
-                    </div> )}
+                    </> }
+            </div>
 
             <fieldset className="selection"
                   disabled={ this.state.isLoading
@@ -329,7 +330,7 @@ class LoadingIndicator extends React.Component<
     }
 
     render () {
-        return <div>
+        return <div class="loading">
             { this.props.text }
             { this.state.ellipsis }
         </div>;

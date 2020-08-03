@@ -54,6 +54,13 @@ body {
     flex: 1;
 }
 
+.connection > .loading {
+    align-items: center;
+    display: flex;
+    flex: 1;
+    justify-content: center;
+}
+
 .connection__status {
     text-transform: uppercase;
     font-weight: bold;
