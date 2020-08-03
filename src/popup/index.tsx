@@ -228,7 +228,6 @@ class PopupApp extends React.Component<
 
 
     private async updateConnectionDetails () {
-        console.log("called!!");
         if (!this.state.serverList) {
             return;
         }
@@ -250,8 +249,6 @@ class PopupApp extends React.Component<
             selectedCountry: matchingServer?.country_code
           , selectedServer: matchingServer?.socks_name
           , connectionDetails: details
-        }, () => {
-            console.log(this.state.connectionDetails);
         });
     }
 
@@ -330,7 +327,7 @@ class LoadingIndicator extends React.Component<
     }
 
     render () {
-        return <div class="loading">
+        return <div className="loading">
             { this.props.text }
             { this.state.ellipsis }
         </div>;

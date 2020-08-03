@@ -77,7 +77,7 @@ async function enableProxy (host: string) {
 
     proxyConnecting = true;
 
-    console.log("connecting...")
+    logger.info("Connecting...");
 
     let details: mullvadApi.ConnectionDetails;
     try {
