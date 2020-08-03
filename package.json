@@ -10,11 +10,11 @@
     "@types/react": "^16.9.44",
     "@types/react-dom": "^16.9.8",
     "copy-webpack-plugin": "^5.1.1",
-    "preact": "^10.4.0",
-    "ts-loader": "^7.0.0",
-    "typescript": "^3.8.3",
+    "preact": "^10.4.6",
+    "ts-loader": "^7.0.5",
+    "typescript": "^3.9.7",
     "web-ext": "^5.0.0",
-    "webpack": "^4.42.1",
-    "webpack-cli": "^3.3.11"
+    "webpack": "^4.44.1",
+    "webpack-cli": "^3.3.12"
   }
 }
