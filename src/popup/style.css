@@ -1,0 +1,117 @@
+:root {
+    --mullvad-blue: #294d73;
+    --mullvad-dark-blue: #192e45;
+    --mullvad-green: #44ad4d;
+    --mullvad-red: #e34039;
+    --mullvad-logo-yellow: #ffd524;
+    --mullvad-logo-brown: #d2943b;
+    --mullvad-logo-beige: #ffcd86;
+
+    --system-font: system-ui
+          , -apple-system, BlinkMacSystemFont
+          , "Segoe UI", Robot, Helvetica, Arial, sans-serif
+          , "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html {
+    background-color: black;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+button,
+select {
+    font: inherit;
+    margin: initial;
+}
+
+body {
+    background-color: var(--mullvad-dark-blue);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--system-font);
+    font-size: 15px;
+    gap: 20px;
+    height: 350px;
+    margin: initial;
+    padding: 20px;
+    width: 300px;
+}
+
+
+body {
+    background-image: url("assets/world.svg");
+    background-position: 50% 15%;
+    background-size: 1000%;
+}
+
+.connection {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+}
+
+.connection__status {
+    text-transform: uppercase;
+    font-weight: bold;
+}
+
+.connection__status--connected {
+    color: var(--mullvad-green);
+}
+.connection__status--connecting {
+    color: var(--mullvad-logo-yellow);
+}
+.connection__status--not-connected {
+    color: var(--mullvad-red);
+}
+
+.connection__city {
+    font-size: 1.8em;
+}
+.connection__city::after {
+    content: ",";
+}
+
+.connection__country {
+    font-size: 1.2em;
+}
+
+
+.selection,
+.control {
+    border: initial;
+    padding: initial;
+}
+
+.selection {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.selection__country {
+
+}
+.selection__server {
+    flex: 1;
+}
+
+.selection__connect {
+    align-self: end;
+}
+
+
+.control {
+    display: flex;
+    gap: 10px;
+}
+
+.control__disconnect,
+.control__reconnect {
+    flex: 1;
+}
+

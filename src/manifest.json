@@ -1,0 +1,35 @@
+{
+    "name": "__MSG_extensionName__"
+  , "description": "__MSG_extensionDescription__"
+  , "version": "0.1.0"
+
+  , "default_locale": "en"
+  , "manifest_version": 2
+
+  , "developer": {
+        "name": "Matt Hensman <m@matt.tf>"
+      , "url": "https://matt.tf"
+    }
+
+  , "browser_specific_settings": {
+        "gecko": {
+            "id": "mullvad@matt.tf"
+          , "strict_min_version": "78.0"
+        }
+    }
+
+  , "browser_action": {
+        "default_icon": "icons/unlocked.svg"
+      , "default_popup": "popup/index.html"
+    }
+
+  , "background": {
+        "scripts": [ "background.bundle.js" ]
+    }
+
+  , "permissions": [
+        "notifications"
+      , "proxy"
+      , "<all_urls>"
+    ]
+}

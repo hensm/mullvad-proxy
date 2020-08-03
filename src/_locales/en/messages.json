@@ -1,0 +1,107 @@
+{
+    "extensionName": {
+        "message": "Mullvad Proxy (unofficial)"
+      , "description": "Name of extension."
+    }
+  , "extensionDescription": {
+        "message": "Connect to a range of Mullvad proxies without manual configuration."
+      , "description": "Description of extension."
+    }
+
+
+  , "notificationConnectionFailedTitle": {
+        "message": "Proxy Connection Failed"
+      , "description": "Title for notification if proxy connection fails."
+    }
+  , "notificationConnectionFailedMessage": {
+        "message": "Could not connect to $host$."
+      , "description": "Message body for notification if proxy connection fails."
+      , "placeholders": {
+            "host": {
+                "content": "$1"
+              , "example": "se1-wg.socks5.mullvad.net"
+            }
+        }
+    }
+
+  , "notificationConnectionFailedMessageNonMullvad": {
+        "message": "Not connected to Mullvad VPN."
+      , "description": "Message body for notification if proxy connection fails because client is not connected to Mullvad network."
+    }
+
+  , "notificationConnectionSucceededTitle": {
+        "message": "Proxy Connected"
+      , "description": "Title for notification if proxy connection succeeds."
+    }
+  , "notificationConnectionSucceededMessage": {
+        "message": "Connected to $host$."
+      , "description": "Message body for notification if proxy connection succeeds."
+      , "placeholders": {
+            "host": {
+                "content": "$1"
+              , "example": "se1-wg.socks5.mullvad.net"
+            }
+        }
+    }
+
+  , "notificationConnectionDisconnectedTitle": {
+        "message": "Disconnected"
+      , "description": "Title for notification when proxy is disconnected."
+    }
+  , "notificationConnectionDisconnectedMessage": {
+        "message": "Disconnected from $host$."
+      , "description": "Message body for notification when proxy is disconnected."
+      , "placeholders": {
+            "host": {
+                "content": "$1"
+              , "example": "se1-wg.socks5.mullvad.net"
+            }
+        }
+    }
+
+
+  , "popupLoading": {
+        "message": "Loading"
+      , "description": "Displayed in place of content whilst loading."
+    }
+
+  , "popupConnectionStatusConnected": {
+        "message": "Connected"
+      , "description": "Connection status displayed whilst connected to a proxy server."
+    }
+  , "popupConnectionStatusConnecting": {
+        "message": "Connecting"
+      , "description": "Connection status displayed whilst connecting to a proxy."
+    }
+  , "popupConnectionStatusNotConnected": {
+        "message": "Not Connected"
+      , "description": "Connection status displayed whilst not connected to a proxy server."
+    }
+
+  , "popupConnectionCityPlaceholder": {
+        "message": "Somewhere"
+      , "description": "If the Mullvad API returns null for the city field."
+    }
+
+  , "popupSelectionCountryPlaceholder": {
+        "message": "Select country..."
+      , "description": "Placeholder text for country combo box."
+    }
+  , "popupSelectionServerPlaceholder": {
+        "message": "Select server..."
+      , "description": "Placeholder text for server combo box."
+    }
+  , "popupSelectionConnect": {
+        "message": "Connect"
+      , "description": "Proxy server connect button text."
+    }
+
+  , "popupDisconnect": {
+        "message": "Disconnect"
+      , "description": "Proxy server disconnect button text."
+    }
+  , "popupReconnect": {
+        "message": "Reconnect"
+      , "description": "Proxy server reconnect button text."
+    }
+}
