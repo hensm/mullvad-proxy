@@ -48,16 +48,37 @@ body {
     background-size: 1000%;
 }
 
+
+.loader {
+    --loader-size: 32px;
+    --loader-color: currentcolor;
+
+    animation: loader 400ms ease infinite;
+    border: calc(var(--loader-size) / 5) solid;
+    border-color: var(--loader-color) transparent;
+    border-radius: 50%;
+    height: var(--loader-size);
+    opacity: 0.5;
+    width: var(--loader-size);
+}
+
+@keyframes loader {
+  from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+
 .connection {
+    align-items: start;
     display: flex;
     flex-direction: column;
     flex: 1;
+    gap: 5px;
+    user-select: none;
 }
 
-.connection > .loading {
+.connection--loading {
     align-items: center;
-    display: flex;
-    flex: 1;
     justify-content: center;
 }
 
@@ -78,13 +99,20 @@ body {
 
 .connection__city {
     font-size: 1.8em;
+    line-height: 1em;
+    margin-bottom: -5px;
 }
 .connection__city::after {
     content: ",";
 }
 
 .connection__country {
-    font-size: 1.2em;
+    font-size: 1.25em;
+}
+
+.connection__ip {
+    opacity: 0.75;
+    user-select: text;
 }
 
 
@@ -117,8 +145,7 @@ body {
     gap: 10px;
 }
 
-.control__disconnect,
-.control__reconnect {
+.control__disconnect {
     flex: 1;
 }
 

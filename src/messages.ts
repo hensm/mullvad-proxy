@@ -1,6 +1,7 @@
 "use strict";
 
 import Messenger from "./lib/Messenger";
+import { ConnectionDetails } from "./lib/mullvadApi";
 
 
 export type Messages = [
@@ -17,7 +18,8 @@ export type Messages = [
   , {
         subject: "background:/connect"
       , data: {
-            host: string;
+            proxyHost: string;
+            details: ConnectionDetails;
         }
     }
   , {

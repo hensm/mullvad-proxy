@@ -5,7 +5,9 @@ import ReactDOM from "react-dom";
 
 import messages from "../messages";
 
+import logger from "../lib/logger";
 import * as mullvadApi from "../lib/mullvadApi";
+import { TypedStorageArea } from "../lib/TypedStorageArea";
 
 
 const _ = browser.i18n.getMessage;
@@ -26,7 +28,7 @@ interface PopupAppState {
 
     connectionDetails?: mullvadApi.ConnectionDetails;
 
-    serverList?: Map<string, mullvadApi.Server[]>;
+    serverMap?: Map<string, mullvadApi.Server[]>;
     selectedCountry?: string;
     selectedServer?: string;
 }
@@ -51,7 +53,6 @@ class PopupApp extends React.Component<
 
         this.handleConnectClick = this.handleConnectClick.bind(this);
         this.handleDisconnectClick = this.handleDisconnectClick.bind(this);
-        this.handleReconnectClick = this.handleReconnectClick.bind(this);
     }
 
     async componentDidMount () {
@@ -76,7 +77,7 @@ class PopupApp extends React.Component<
 
                         return prevState;
                     }, () => {
-                        if (this.state.proxy?.isConnected && this.state.serverList) {
+                        if (this.state.proxy?.isConnected && this.state.serverMap) {
                             this.updateConnectionDetails();
                         }
                     });
@@ -86,11 +87,31 @@ class PopupApp extends React.Component<
             }
         });
 
-        const servers = await mullvadApi.getServers();
-        const serverList = new Map<string, mullvadApi.Server[]>();
 
-        for (const server of servers) {
-            let countryServers = serverList.get(
+        const localStorage = new TypedStorageArea<{
+            serverList: mullvadApi.Server[]
+          , serverListFrom: number;
+        }>(browser.storage.local);
+
+        let { serverList, serverListFrom } = await localStorage.get(
+                [ "serverList", "serverListFrom" ]);
+
+        // Cache for five minutes
+        if (!serverList || (Date.now() - serverListFrom) > 300000) {
+            serverList = await mullvadApi.fetchServerList();
+            serverListFrom = Date.now();
+
+            await localStorage.set({
+                serverList
+              , serverListFrom
+            });
+        }
+
+
+        const serverMap = new Map<string, mullvadApi.Server[]>();
+
+        for (const server of serverList) {
+            let countryServers = serverMap.get(
                     server.country_code) ?? [];
 
             countryServers.push(server);
@@ -111,11 +132,11 @@ class PopupApp extends React.Component<
                 return 0;
             });
 
-            serverList.set(server.country_code, countryServers);
+            serverMap.set(server.country_code, countryServers);
         }
 
         this.setState({
-            serverList
+            serverMap
           , isLoading: false
         }, () => {
             this.updateConnectionDetails();
@@ -123,10 +144,16 @@ class PopupApp extends React.Component<
     }
 
     render () {
+        let connectionClassName = "connection";
+        if (this.state.isLoading) {
+            connectionClassName += " connection--loading";
+        }
+
         return <>
-            <div className="connection">
+            <div className={ connectionClassName }>
                 { this.state.isLoading
-                    ? <LoadingIndicator text={ _("popupLoading") } />
+                    ? <div className="loader"
+                           title={ _("popupLoading") } />
                     : <>
                         <div className={`connection__status ${
                                 this.state.proxy?.isConnected
@@ -137,15 +164,22 @@ class PopupApp extends React.Component<
                             { this.state.proxy?.isConnected
                                 ? _("popupConnectionStatusConnected")
                                 : this.state.proxy?.isConnecting
-                                    ? <LoadingIndicator text={ _("popupConnectionStatusConnecting") } />
+                                    ? <LoadingIndicator text={
+                                              _("popupConnectionStatusConnecting") } />
                                     : _("popupConnectionStatusNotConnected") }
                         </div>
-                        <div className="connection__city">
-                            { this.state.connectionDetails?.city
-                                    ?? _("popupConnectionCityPlaceholder") }
-                        </div>
+
+                        { this.state.connectionDetails?.city &&
+                            <div className="connection__city">
+                                { this.state.connectionDetails.city }
+                            </div> }
+
                         <div className="connection__country">
                             { this.state.connectionDetails?.country }
+                        </div>
+
+                        <div className="connection__ip" title="IP address">
+                            { this.state.connectionDetails?.ip }
                         </div>
                     </> }
             </div>
@@ -153,7 +187,7 @@ class PopupApp extends React.Component<
             <fieldset className="selection"
                   disabled={ this.state.isLoading
                           || this.state.proxy?.isConnecting
-                          || !this.state.serverList
+                          || !this.state.serverMap
                              /**
                               * Alternate proxy servers are only accessible when
                               * connected to a WireGuard VPN server.
@@ -171,8 +205,8 @@ class PopupApp extends React.Component<
                         { _("popupSelectionCountryPlaceholder") }
                     </option>
 
-                    { this.state.serverList && Array.from(
-                            this.state.serverList.entries()).map(([countryCode, server], i) =>
+                    { this.state.serverMap && Array.from(
+                            this.state.serverMap.entries()).map(([countryCode, server], i) =>
                         <option value={ countryCode } key={i}>
                             { server[0].country_name }
                         </option> )}
@@ -189,7 +223,7 @@ class PopupApp extends React.Component<
                         { _("popupSelectionServerPlaceholder") }
                     </option>
 
-                    { this.state.selectedCountry && this.state.serverList?.get(
+                    { this.state.selectedCountry && this.state.serverMap?.get(
                             this.state.selectedCountry)?.map((server, i) => 
                         <option value={ server.socks_name } key={i}>
                             { server.socks_name } ({ server.city_name })
@@ -216,26 +250,26 @@ class PopupApp extends React.Component<
                                 && !this.state.proxy?.isConnecting }>
                     { _("popupDisconnect") }
                 </button>
-                <button className="control__reconnect"
-                        onClick={ this.handleReconnectClick }
-                        disabled={ !this.state.proxy?.isConnected
-                                || this.state.proxy?.isConnecting }>
-                    { _("popupReconnect") }
-                </button>
             </fieldset>
         </>;
     }
 
 
     private async updateConnectionDetails () {
-        if (!this.state.serverList) {
+        if (!this.state.serverMap) {
             return;
         }
 
-        const details = await mullvadApi.getDetails();
+        let details: mullvadApi.ConnectionDetails;
+        try {
+            details = await mullvadApi.fetchConnectionDetails();
+        } catch (err) {
+            logger.error("Failed to fetch connection details!");
+            return;
+        }
 
         let matchingServer: mullvadApi.Server | undefined;
-        for (const [, countryServers ] of this.state.serverList) {
+        for (const [, countryServers ] of this.state.serverMap) {
             const match = countryServers.find(server =>
                     this.state.proxy?.host?.startsWith(server.socks_name));
 
@@ -272,11 +306,12 @@ class PopupApp extends React.Component<
 
 
     private handleConnectClick () {
-        if (this.state.selectedServer) {
+        if (this.state.selectedServer && this.state.connectionDetails) {
             port.postMessage({
                 subject: "background:/connect"
               , data: {
-                    host: this.state.selectedServer
+                    proxyHost: this.state.selectedServer
+                  , details: this.state.connectionDetails
                 }
             });
         }
@@ -286,17 +321,8 @@ class PopupApp extends React.Component<
         port.postMessage({
             subject: "background:/disconnect"
         });
-    }
 
-    private handleReconnectClick () {
-        if (this.state.proxy?.host) {
-            port.postMessage({
-                subject: "background:/connect"
-              , data: {
-                    host: this.state.proxy.host
-                }
-            });
-        }
+        this.updateConnectionDetails();
     }
 }
 

@@ -28,8 +28,9 @@
     }
 
   , "permissions": [
-        "notifications"
-      , "proxy"
+        "proxy"
+      , "notifications"
+      , "storage"
       , "<all_urls>"
     ]
 }

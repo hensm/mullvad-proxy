@@ -56,7 +56,9 @@ export interface PortDetails {
 /**
  * Gets public IP address as string.
  */
-export async function getIpAddress () {
+export async function fetchIpAddress () {
+    logger.info("Fetching IP address...");
+
     const res = await fetch(ENDPOINT_AIM_IP);
     return (await res.text()).trim();
 }
@@ -64,7 +66,9 @@ export async function getIpAddress () {
 /**
  * Gets connection details JSON.
  */
-export async function getDetails () {
+export async function fetchConnectionDetails () {
+    logger.info("Fetching connection details...");
+
     const res = await fetch(ENDPOINT_AIM_DETAILS);
     const json: ConnectionDetails = await res.json();
 
@@ -77,10 +81,12 @@ export async function getDetails () {
 /**
  * Gets port details JSON.
  */
-export async function getPortDetails (port: number) {
+export async function fetchPortDetails (port: number) {
     if (port < 1 || port > 65536) {
         throw new Error("Invalid port!");
     }
+
+    logger.info("Fetching port details...");
 
     let json;
     try {
@@ -114,7 +120,9 @@ export interface Server {
 /**
  * Gets Mullvad WireGuard server list.
  */
-export async function getServers () {
+export async function fetchServerList () {
+    logger.info("Fetching server list...");
+
     let json;
     try {
         const res = await fetch(ENDPOINT_RELAYS);

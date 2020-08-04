@@ -65,33 +65,22 @@ function onProxyError (err: Error) {
  * listener. If client isn't connected via Mullvad, proxy
  * connection is aborted and user is notified.
  */
-async function enableProxy (host: string) {
+async function enableProxy (
+        host: string
+      , details: mullvadApi.ConnectionDetails) {
+
     if (proxyConnecting) {
         return;
-    }
-
-    // Cleanup
-    if (proxy) {
-        disableProxy();
     }
 
     proxyConnecting = true;
 
     logger.info("Connecting...");
 
-    let details: mullvadApi.ConnectionDetails;
-    try {
-        details = await mullvadApi.getDetails();
-    } catch (err) {
-        // Quit if Mullvad API is unreachable
-        browser.notifications.create(
-                notifConnectionFailed(proxy?.host));
-        return;
-    }
 
     // Quit if not connected to a Mullvad server
     if (!details.mullvad_exit_ip) {
-        logger.log("Not connected via Mullvad!");
+        logger.error("Not connected via Mullvad!");
         browser.notifications.create(notifConnectionFailedNonMullvad);
         return;
     }
@@ -103,13 +92,7 @@ async function enableProxy (host: string) {
      */
     proxy = {
         type: "socks"
-
-        // If host not provided, use default for current VPN server
-      , host: host ?? (details.mullvad_server_type === "wireguard"
-                  ? mullvadApi.SOCKS_ADDRESS
-                  : mullvadApi.SOCKS_ADDRESS_WG)
-
-        // All servers use same port
+      , host
       , port: mullvadApi.SOCKS_PORT
     };
 
@@ -123,7 +106,7 @@ async function enableProxy (host: string) {
 
    try {
         // Request to trigger proxy
-        const address = await mullvadApi.getIpAddress();
+        const address = await mullvadApi.fetchIpAddress();
         logger.info(`IP address: ${address}`);
 
         browser.notifications.create(
@@ -187,18 +170,21 @@ messages.onConnect.addListener(port => {
     port.onMessage.addListener(async message => {
         switch (message.subject) {
             case "background:/connect": {
-                const host = mullvadApi.getFullSocksHost(message.data.host);
+                const host = mullvadApi.getFullSocksHost(
+                        message.data.proxyHost);
 
                 port.postMessage({
                     subject: "popup:/update"
                   , data: {
-                        isConnecting: true
+                        isConnected: false
+                      , isConnecting: true
                     }
                 });
 
-                await enableProxy(host);
+                await enableProxy(host, message.data.details);
                 break;
             }
+
             case "background:/disconnect": {
                 disableProxy(true);
                 break;
