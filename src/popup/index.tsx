@@ -13,6 +13,18 @@ import { TypedStorageArea } from "../lib/TypedStorageArea";
 const _ = browser.i18n.getMessage;
 
 
+browser.runtime.getPlatformInfo()
+    .then(platformInfo => {
+        if (platformInfo.os === "mac") {
+            const linkElement = document.createElement("link");
+            linkElement.rel = "stylesheet";
+            linkElement.href = "style-mac.css";
+
+            document.head.append(linkElement);
+        }
+    });
+
+
 // Background script messaging
 let port: ReturnType<typeof messages.connect>;
 

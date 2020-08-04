@@ -128,13 +128,6 @@ body {
     gap: 10px;
 }
 
-.selection__country {
-
-}
-.selection__server {
-    flex: 1;
-}
-
 .selection__connect {
     align-self: end;
 }

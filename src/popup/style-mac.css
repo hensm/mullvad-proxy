@@ -1,0 +1,9 @@
+button,
+select {
+    font: menu;
+    height: 26px;
+}
+
+.selection {
+    gap: 6px;
+}
