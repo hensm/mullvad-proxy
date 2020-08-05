@@ -148,6 +148,7 @@ body {
     gap: 10px;
 }
 
+.control__connect,
 .control__disconnect {
     flex: 1;
 }

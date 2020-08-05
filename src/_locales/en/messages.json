@@ -96,6 +96,10 @@
       , "description": "Proxy server connect button text."
     }
 
+  , "popupConnect": {
+        "message": "Connect"
+      , "description": "Proxy server connect button (only displayed whilst not connected via WireGuard) text."
+    }
   , "popupDisconnect": {
         "message": "Disconnect"
       , "description": "Proxy server disconnect button text."

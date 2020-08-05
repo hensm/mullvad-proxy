@@ -163,6 +163,10 @@ class PopupApp extends React.Component<
             connectionClassName += " connection--loading";
         }
 
+        const connectingOrConnected =
+                this.state.proxy?.isConnected
+             || this.state.proxy?.isConnecting;
+
         return <>
             <div className={ connectionClassName }>
                 { this.state.isLoading
@@ -202,74 +206,78 @@ class PopupApp extends React.Component<
                     </> }
             </div>
 
-            <fieldset className="selection"
-                  disabled={ this.state.isLoading
-                          || this.state.proxy?.isConnecting
-                          || !this.state.serverMap
-                             /**
-                              * Alternate proxy servers are only accessible when
-                              * connected to a WireGuard VPN server.
-                              */
-                          || (this.state.connectionDetails?.mullvad_server_type !== "wireguard"
-                           && this.state.connectionDetails?.mullvad_server_type !== "socks through wireguard") }>
+            { this.isViaWireGuard() &&
+                <fieldset className="selection"
+                      disabled={ this.state.isLoading
+                              || this.state.proxy?.isConnecting
+                              || !this.state.serverMap }>
 
-                <select className="selection__country"
-                        value={ this.state.selectedCountry }
-                        onChange={ this.handleCountryChange }>
+                    <select className="selection__country"
+                            value={ this.state.selectedCountry }
+                            onChange={ this.handleCountryChange }>
 
-                    { /* placeholder */ }
-                    <option selected={ !this.state.selectedCountry }
-                            disabled>
-                        { _("popupSelectionCountryPlaceholder") }
-                    </option>
+                        { /* placeholder */ }
+                        <option selected={ !this.state.selectedCountry }
+                                disabled>
+                            { _("popupSelectionCountryPlaceholder") }
+                        </option>
 
-                    { this.state.serverMap && Array.from(
-                            this.state.serverMap.entries()).map(([countryCode, server], i) =>
-                        <option value={ countryCode } key={i}>
-                            { server[0].country_name }
-                        </option> )}
-                </select>
+                        { this.state.serverMap && Array.from(
+                                this.state.serverMap.entries()).map(([countryCode, server], i) =>
+                            <option value={ countryCode } key={i}>
+                                { server[0].country_name }
+                            </option> )}
+                    </select>
 
-                <select className="selection__server"
-                        disabled={ !this.state.selectedCountry }
-                        value={ this.state.selectedServer }
-                        onChange={ this.handleServerChange }>
+                    <select className="selection__server"
+                            disabled={ !this.state.selectedCountry }
+                            value={ this.state.selectedServer }
+                            onChange={ this.handleServerChange }>
 
-                    { /* placeholder */ }
-                    <option selected={ !this.state.selectedServer }
-                            disabled>
-                        { _("popupSelectionServerPlaceholder") }
-                    </option>
+                        { /* placeholder */ }
+                        <option selected={ !this.state.selectedServer }
+                                disabled>
+                            { _("popupSelectionServerPlaceholder") }
+                        </option>
 
-                    { this.state.selectedCountry && this.state.serverMap?.get(
-                            this.state.selectedCountry)?.map((server, i) => 
-                        <option value={ server.socks_name } key={i}>
-                            { server.socks_name } ({ server.city_name })
-                        </option> )}
-                </select>
+                        { this.state.selectedCountry && this.state.serverMap?.get(
+                                this.state.selectedCountry)?.map((server, i) => 
+                            <option value={ server.socks_name } key={i}>
+                                { server.socks_name } ({ server.city_name })
+                            </option> )}
+                    </select>
 
-                <button className="selection__connect"
-                        /**
-                         * Enable connect button only if a server that isn't the
-                         * current server is selected.
-                         */
-                        disabled={ !(this.state.selectedServer && (
-                                this.state.selectedServer !== this.state.proxy?.host)) }
-                        onClick={ this.handleConnectClick }>
-                    { _("popupSelectionConnect") }
-                </button>
-            </fieldset>
+                    <button className="selection__connect"
+                            /**
+                             * Enable connect button only if a server that isn't the
+                             * current server is selected.
+                             */
+                            disabled={ !(this.state.selectedServer && (
+                                    this.state.selectedServer !== this.state.proxy?.host)) }
+                            onClick={ this.handleConnectClick }>
+                        { _("popupSelectionConnect") }
+                    </button>
+                </fieldset> }
 
             <fieldset className="control"
                       disabled={ this.state.isLoading }>
-                <button className="control__disconnect"
-                        onClick={ this.handleDisconnectClick }
-                        disabled={ !this.state.proxy?.isConnected
-                                && !this.state.proxy?.isConnecting }>
-                    { _("popupDisconnect") }
-                </button>
+                { !this.isViaWireGuard() && !connectingOrConnected
+                    ? <button className="control__connect"
+                              onClick={ this.handleConnectClick }>
+                        { _("popupConnect") }
+                    </button>
+                    : <button className="control__disconnect"
+                              onClick={ this.handleDisconnectClick }
+                              disabled={ !connectingOrConnected }>
+                        { _("popupDisconnect") }
+                    </button> }
             </fieldset>
         </>;
+    }
+
+    private isViaWireGuard () {
+        return this.state.connectionDetails?.mullvad_server_type === "wireguard"
+            || this.state.connectionDetails?.mullvad_server_type === "socks through wireguard"
     }
 
     private async updateConnectionDetails () {
@@ -327,7 +335,19 @@ class PopupApp extends React.Component<
 
 
     private handleConnectClick () {
-        if (this.state.selectedServer && this.state.connectionDetails) {
+        if (!this.state.connectionDetails) {
+            return;
+        }
+
+        if (!this.isViaWireGuard()) {
+            port.postMessage({
+                subject: "background:/connect"
+              , data: {
+                    proxyHost: mullvadApi.SOCKS_ADDRESS
+                  , details: this.state.connectionDetails
+                }
+            })
+        } else if (this.state.selectedServer) {
             port.postMessage({
                 subject: "background:/connect"
               , data: {

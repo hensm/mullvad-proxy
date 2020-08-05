@@ -228,8 +228,10 @@ messages.onConnect.addListener(port => {
     port.onMessage.addListener(async message => {
         switch (message.subject) {
             case "background:/connect": {
-                const host = mullvadApi.getFullSocksHost(
-                        message.data.proxyHost);
+                const IP_ADDR_REGEX = /(?:\d{1,3}\.){3}\d{1,3}/;
+                const host = IP_ADDR_REGEX.test(message.data.proxyHost)
+                    ? message.data.proxyHost
+                    : mullvadApi.getFullSocksHost(message.data.proxyHost);
 
                 port.postMessage({
                     subject: "popup:/update"
