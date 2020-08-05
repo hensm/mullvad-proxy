@@ -36,6 +36,9 @@ module.exports = {
               , to: OUTPUT_PATH
               , ignore: [ "*.ts", "*.tsx" ]
             }
+          , {
+                from: "./node_modules/webextension-polyfill/dist/browser-polyfill.min.js"
+            }
         ])
     ]
   , resolve: {

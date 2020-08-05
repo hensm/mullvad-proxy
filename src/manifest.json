@@ -24,7 +24,10 @@
     }
 
   , "background": {
-        "scripts": [ "background.bundle.js" ]
+        "scripts": [
+            "browser-polyfill.min.js"
+          , "background.bundle.js"
+        ]
     }
 
   , "permissions": [

@@ -1,6 +1,7 @@
 "use strict";
 
 import logger from "./lib/logger";
+import * as utils from "./lib/utils";
 import * as mullvadApi from "./lib/mullvadApi";
 
 import messages from "./messages";
@@ -44,6 +45,20 @@ const notifConnectionDisconnected = (host = "host")
 });
 
 
+let isChromium: boolean;
+const { chrome } = (window as any);
+
+utils.isChromium()
+    .then(res => {
+        isChromium = res;
+
+        // Ensure Chrome proxy settings are cleared
+        if (isChromium) {
+            disableProxy();
+        }
+    });
+
+
 // Current proxy details
 let proxy: browser.proxy.Proxy | null;
 let proxyConnecting = false;
@@ -52,8 +67,8 @@ function onProxyRequest (_details: browser.proxy._OnRequestDetails) {
     return proxy;
 }
 
-function onProxyError (err: Error) {
-    logger.error("Proxy error!", err);
+function onProxyError (...args: any[]) {
+    logger.error("Proxy error!", args);
     browser.notifications.create(
             notifConnectionFailed(proxy?.host));
     disableProxy();
@@ -73,35 +88,64 @@ async function enableProxy (
         return;
     }
 
-    proxyConnecting = true;
-
     logger.info("Connecting...");
+
+
+    /**
+     * Mullvad SOCKS5 proxy servers do not require authentication,
+     * since they're siloed within the network and accessible only
+     * to authenticated users already.
+     */
+    proxy = {
+        type: "socks"
+      , host: host
+      , port: mullvadApi.SOCKS_PORT
+    }
+
+    proxyConnecting = true;
 
 
     // Quit if not connected to a Mullvad server
     if (!details.mullvad_exit_ip) {
         logger.error("Not connected via Mullvad!");
         browser.notifications.create(notifConnectionFailedNonMullvad);
+        await disableProxy();
         return;
     }
 
     /**
-     * Mullvad SOCKS5 proxy servers do not require either username
-     * or password authentication, since they're siloed within the
-     * network and accessible only to authenticated users already.
+     * Firefox uses a request-based proxy API that allows more
+     * granular control over which requests are proxied, whereas
+     * Chrome is more limited, only allowing basic, declarative
+     * customizations.
+     *
+     * TODO: Investigate edge cases
      */
-    proxy = {
-        type: "socks"
-      , host
-      , port: mullvadApi.SOCKS_PORT
-    };
+    if (isChromium) {
+        logger.info("Proxy registered", proxy);
 
-    logger.info("PAC created", proxy);
+        chrome.proxy.onProxyError.addListener(onProxyError);
+        chrome.proxy.settings.set({
+            scope: "regular"
+          , value: {
+                mode: "fixed_servers"
+              , rules: {
+                    singleProxy: {
+                        scheme: "socks5"
+                      , host: proxy.host
+                      , port: parseInt(proxy.port)
+                    }
+                }
+            }
+        });
+    } else {
+        logger.info("Proxy registered", proxy);
 
-    browser.proxy.onError.addListener(onProxyError);
-    browser.proxy.onRequest.addListener(onProxyRequest, {
-        urls: [ "<all_urls>" ]
-    });
+        browser.proxy.onError.addListener(onProxyError);
+        browser.proxy.onRequest.addListener(onProxyRequest, {
+            urls: [ "<all_urls>" ]
+        });
+    }
 
 
    try {
@@ -120,10 +164,12 @@ async function enableProxy (
     } catch (err) {
         logger.error("Proxy request failed!");
 
-        browser.notifications.create(
-                notifConnectionFailed(proxy.host));
+        if (proxy) {
+            browser.notifications.create(
+                    notifConnectionFailed(proxy.host));
 
-        disableProxy();
+            await disableProxy();
+        }
     }
 }
 
@@ -143,8 +189,15 @@ function disableProxy (notify = false) {
         path: browser.runtime.getURL("icons/unlocked.svg")
     });
 
-    browser.proxy.onError.removeListener(onProxyError);
-    browser.proxy.onRequest.removeListener(onProxyRequest);
+    if (isChromium) {
+        chrome.proxy.onProxyError.removeListener(onProxyError);
+        chrome.proxy.settings.clear({
+            scope: "regular"
+        });
+    } else {
+        browser.proxy.onError.removeListener(onProxyError);
+        browser.proxy.onRequest.removeListener(onProxyRequest);
+    }
 
     proxy = null;
 }
@@ -186,7 +239,7 @@ messages.onConnect.addListener(port => {
             }
 
             case "background:/disconnect": {
-                disableProxy(true);
+                await disableProxy(true);
                 break;
             }
         }
