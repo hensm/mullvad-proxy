@@ -62,6 +62,7 @@ utils.isChromium()
 // Current proxy details
 let proxy: browser.proxy.Proxy | null;
 let proxyConnecting = false;
+let proxyAbortController = new AbortController();
 
 function onProxyRequest (_details: browser.proxy._OnRequestDetails) {
     return proxy;
@@ -150,7 +151,10 @@ async function enableProxy (
 
    try {
         // Request to trigger proxy
-        const address = await mullvadApi.fetchIpAddress();
+        const address = await mullvadApi.fetchIpAddress({
+            signal: proxyAbortController.signal
+        });
+
         logger.info(`IP address: ${address}`);
 
         browser.notifications.create(
@@ -162,9 +166,9 @@ async function enableProxy (
 
         proxyConnecting = false;
     } catch (err) {
-        logger.error("Proxy request failed!");
-
-        if (proxy) {
+        // Only handle request errors for the current fetch
+        if (proxy?.host === host) {
+            logger.error("Proxy request failed!");
             browser.notifications.create(
                     notifConnectionFailed(proxy.host));
 
@@ -178,8 +182,6 @@ async function enableProxy (
  * Removes proxy request listener.
  */
 function disableProxy (notify = false) {
-    proxyConnecting = false;
-
     if (notify) {
         browser.notifications.create(
                 notifConnectionDisconnected(proxy?.host));
@@ -200,6 +202,9 @@ function disableProxy (notify = false) {
     }
 
     proxy = null;
+    proxyConnecting = false;
+    proxyAbortController.abort();
+    proxyAbortController = new AbortController();
 }
 
 

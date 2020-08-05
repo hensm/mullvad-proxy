@@ -31,6 +31,7 @@ let port: ReturnType<typeof messages.connect>;
 
 interface PopupAppState {
     isLoading: boolean;
+    isUpdating: boolean;
 
     proxy?: {
         isConnected: boolean;
@@ -53,6 +54,7 @@ class PopupApp extends React.Component<
 
         this.state = {
             isLoading: true
+          , isUpdating: false
           , proxy: {
                 isConnected: false
               , isConnecting: false
@@ -181,18 +183,22 @@ class PopupApp extends React.Component<
                                     : _("popupConnectionStatusNotConnected") }
                         </div>
 
-                        { this.state.connectionDetails?.city &&
-                            <div className="connection__city">
-                                { this.state.connectionDetails.city }
-                            </div> }
+                        { this.state.isUpdating
+                            ? <div className="loader"
+                                   title={ _("popupLoading") } />
+                            : <>
+                                { this.state.connectionDetails?.city &&
+                                    <div className="connection__city">
+                                        { this.state.connectionDetails.city }
+                                    </div> }
+                                <div className="connection__country">
+                                    { this.state.connectionDetails?.country }
+                                </div>
 
-                        <div className="connection__country">
-                            { this.state.connectionDetails?.country }
-                        </div>
-
-                        <div className="connection__ip" title="IP address">
-                            { this.state.connectionDetails?.ip }
-                        </div>
+                                <div className="connection__ip" title="IP address">
+                                    { this.state.connectionDetails?.ip }
+                                </div>
+                            </> }
                     </> }
             </div>
 
@@ -266,17 +272,19 @@ class PopupApp extends React.Component<
         </>;
     }
 
-
     private async updateConnectionDetails () {
         if (!this.state.serverMap) {
             return;
         }
+
+        this.setState({ isUpdating: true });
 
         let details: mullvadApi.ConnectionDetails;
         try {
             details = await mullvadApi.fetchConnectionDetails();
         } catch (err) {
             logger.error("Failed to fetch connection details!");
+            this.setState({ isUpdating: false });
             return;
         }
 
@@ -295,6 +303,7 @@ class PopupApp extends React.Component<
             selectedCountry: matchingServer?.country_code
           , selectedServer: matchingServer?.socks_name
           , connectionDetails: details
+          , isUpdating: false
         });
     }
 

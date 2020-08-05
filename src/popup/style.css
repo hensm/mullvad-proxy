@@ -97,6 +97,10 @@ body {
     color: var(--mullvad-red);
 }
 
+.connection > .loader {
+    --loader-size: 24px;
+}
+
 .connection__city {
     font-size: 1.8em;
     line-height: 1em;
