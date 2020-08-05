@@ -103,6 +103,7 @@ body {
 
 .connection__city {
     font-size: 1.8em;
+    font-weight: bold;
     line-height: 1em;
     margin-bottom: -5px;
 }
