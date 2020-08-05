@@ -150,6 +150,6 @@ body {
 
 .control__connect,
 .control__disconnect {
-    flex: 1;
+    width: 100%;
 }
 
