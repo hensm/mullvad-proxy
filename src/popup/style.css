@@ -37,8 +37,8 @@ body {
     gap: 20px;
     height: 350px;
     margin: initial;
+    min-width: 300px;
     padding: 20px;
-    width: 300px;
 }
 
 
