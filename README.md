@@ -2,7 +2,7 @@
 
 # Mullvad Proxy
 
-Rough prototype for a Mullvad proxy browser extension. Currently only supports Firefox, but should work in Chrome/Opera/Edge with minimal changes.
+Rough prototype for a Mullvad proxy browser extension. Currently supports Firefox and Chromium-based browsers. 
 
 
 
@@ -36,7 +36,7 @@ npm run build
   Same as `build`, but also rebuilds on file changes.
 
 * `npm run start`  
-  Starts a development instance of Firefox with the built extension (from `dist/`) installed.
+  Starts a development instance of Firefox with the built extension (from `dist/`) installed. To use with other browsers, see the `-t`/`--target` option.
 
 * `npm run package`  
   Builds and packages extension as an XPI archive. Outputs to `web-ext-artifacts/`.
