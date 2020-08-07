@@ -4,6 +4,7 @@ select {
     height: 26px;
 }
 
-.selection {
-    gap: 6px;
+.selection__country,
+.selection__server {
+    margin-bottom: 6px;
 }
