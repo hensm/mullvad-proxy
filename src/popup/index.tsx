@@ -125,8 +125,11 @@ class PopupApp extends React.Component<
         const serverMap = new Map<string, mullvadApi.Server[]>();
 
         for (const server of serverList) {
-            let countryServers = serverMap.get(
-                    server.country_code) ?? [];
+            let countryServers = serverMap.get(server.country_code) ?? [];
+
+            if (!server.active) {
+                continue;
+            }
 
             countryServers.push(server);
 
