@@ -208,15 +208,16 @@ class PopupApp extends React.Component<
 
             { this.isViaWireGuard() &&
                 <fieldset className="selection"
-                      disabled={ this.state.isLoading
-                              || this.state.proxy?.isConnecting
-                              || !this.state.serverMap }>
+                          // Disabled if not in a usable state
+                          disabled={ this.state.isLoading
+                                  || this.state.proxy?.isConnecting
+                                  || !this.state.serverMap }>
 
                     <select className="selection__country"
                             value={ this.state.selectedCountry }
                             onChange={ this.handleCountryChange }>
 
-                        { /* placeholder */ }
+                        { /* Country placeholder */ }
                         <option selected={ !this.state.selectedCountry }
                                 disabled>
                             { _("popupSelectionCountryPlaceholder") }
@@ -234,7 +235,7 @@ class PopupApp extends React.Component<
                             value={ this.state.selectedServer }
                             onChange={ this.handleServerChange }>
 
-                        { /* placeholder */ }
+                        { /* Server placeholder */ }
                         <option selected={ !this.state.selectedServer }
                                 disabled>
                             { _("popupSelectionServerPlaceholder") }
@@ -259,11 +260,18 @@ class PopupApp extends React.Component<
                     </button>
                 </fieldset> }
 
-            <fieldset className="control"
-                      disabled={ this.state.isLoading }>
-                { !this.isViaWireGuard() && !connectingOrConnected
+            <fieldset className="control">
+                { /**
+                   * If user is connected via OpenVPN, the connect button is
+                   * displayed in place of a disabled disconnect button (instead
+                   * of under the server selection UI) whilst the user isn't
+                   * connected/connecting to a proxy.
+                   */ }
+                { (this.state.connectionDetails && !this.isViaWireGuard())
+                        && !connectingOrConnected
                     ? <button className="control__connect"
-                              onClick={ this.handleConnectClick }>
+                              onClick={ this.handleConnectClick }
+                              disabled={ this.state.isLoading }>
                         { _("popupConnect") }
                     </button>
                     : <button className="control__disconnect"
