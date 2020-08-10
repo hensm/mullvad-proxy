@@ -1,0 +1,16 @@
+Privacy Policy
+==============
+
+Mullvad Proxy does not collect user data.
+
+The extension makes API requests to servers operated by Mullvad VPN AB
+for the purposes of providing a list of proxy servers, and to get
+details about the current connection. Additionally, whilst connected to
+a proxy server, all supported requests (including HTTP, HTTPS and FTP
+requests) are made via that server.
+
+The extension is not affiliated with Mullvad VPN AB. For information on
+how user data collected by requests to their servers is handled, see
+their privacy policy:
+
+https://mullvad.net/en/help/privacy-policy/
