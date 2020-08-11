@@ -28,6 +28,21 @@ browser.runtime.getPlatformInfo()
 // Background script messaging
 let port: ReturnType<typeof messages.connect>;
 
+// TODO: Convert API lat/long to x/y instead?
+const mullvadCountryMap: { [k: string]: string } = {
+    "Austria": "at"              , "Australia": "au"      , "Belgium": "be"
+  , "Bulgaria": "bg"             , "Brazil": "br"         , "Canada": "ca"
+  , "Switzerland": "ch"          , "Czechia": "cz"        , "Germany": "de"
+  , "Denmark": "dk"              , "Spain": "es"          , "Finland": "fi"
+  , "France": "fr"               , "United Kingdom": "gb" , "Hong Kong": "hk"
+  , "Hungary": "hu"              , "Ireland": "ie"        , "Italy": "it"
+  , "Japan": "jp"                , "Luxembourg": "lu"     , "Latvia": "lv"
+  , "Republic of Moldova": "md"  , "Netherlands": "nl"    , "Norway": "no"
+  , "New Zealand": "nz"          , "Poland": "pl"         , "Romania": "ro"
+  , "Serbia": "rs"               , "Sweden": "se"         , "Singapore": "sg"
+  , "United States": "us"
+};
+
 
 interface PopupAppState {
     isLoading: boolean;
@@ -49,17 +64,49 @@ interface PopupAppState {
 class PopupApp extends React.Component<
         {}, PopupAppState> {
 
+    state: PopupAppState = {
+        isLoading: true
+      , isUpdating: false
+      , proxy: {
+            isConnected: false
+          , isConnecting: false
+        }
+    };
+
+
+    private pathOffsets = new Map<string, [number, number]>();
+    private svgWrapper: HTMLDivElement;
+    private svgElement: SVGSVGElement;
+
     constructor (props: {}) {
         super(props);
 
-        this.state = {
-            isLoading: true
-          , isUpdating: false
-          , proxy: {
-                isConnected: false
-              , isConnecting: false
-            }
-        };
+        const req = new XMLHttpRequest();
+        req.open("GET", "assets/world.svg", false);
+        req.send();
+
+        this.svgWrapper = document.createElement("div");
+        this.svgElement = req.responseXML!.querySelector("svg")!;
+
+        this.svgWrapper.classList.add("svg-wrapper");
+        this.svgWrapper.append(this.svgElement);
+        document.body.append(this.svgWrapper);
+
+        for (const path of this.svgElement.children) {
+            const wrapperRect = this.svgWrapper.getBoundingClientRect();
+            const pathRect = path.getBoundingClientRect();
+
+            // Normalize
+            path.id = path.id.toLowerCase();
+
+            this.pathOffsets.set(path.id, [
+                ((wrapperRect.x + (wrapperRect.width / 2))
+                        - (pathRect.x + (pathRect.width / 2)))
+              , ((wrapperRect.y + (wrapperRect.height / 2))
+                        - (pathRect.y + (pathRect.height / 2)))
+            ]);
+        }
+
 
         // Event handlers
         this.handleCountryChange = this.handleCountryChange.bind(this);
@@ -67,6 +114,48 @@ class PopupApp extends React.Component<
 
         this.handleConnectClick = this.handleConnectClick.bind(this);
         this.handleDisconnectClick = this.handleDisconnectClick.bind(this);
+    }
+
+    private focusCountry (countryCode: string) {
+        if (!this.pathOffsets.has(countryCode)) {
+            return;
+        }
+
+        const [ translateX, translateY ] =
+                this.pathOffsets.get(countryCode)!;
+
+        this.svgElement.style.transform =
+                `translate(${translateX}px, ${
+                             translateY}px)`;
+
+        /**
+         * Only set transition after first transform has been set,
+         * timeout needed so transition doesn't apply to that
+         * transform.
+         */
+        if (!this.svgElement.style.transition) {
+            setTimeout(() => {
+                this.svgElement.style.transition = "transform 400ms ease";
+            });
+        }
+
+        // TODO: Offer as option?        
+        /*const paths = this.svgElement.querySelectorAll("path");
+        for (const path of paths) {
+            if (path.id === countryCode) {
+                path.style.fill = "#44ad4d";
+                continue;
+            }
+
+            path.style.removeProperty("fill");
+        }*/
+    }
+
+    async componentDidUpdate () {
+        if (this.state.connectionDetails) {
+            this.focusCountry(mullvadCountryMap[
+                    this.state.connectionDetails.country]);
+        }
     }
 
     async componentDidMount () {
@@ -325,7 +414,6 @@ class PopupApp extends React.Component<
           , isUpdating: false
         });
     }
-
 
     private handleCountryChange (
             ev: React.ChangeEvent<HTMLSelectElement>) {

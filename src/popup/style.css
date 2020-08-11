@@ -39,13 +39,20 @@ body {
     margin: initial;
     min-width: 300px;
     padding: 20px;
+    position: relative;
+    z-index: -1;
 }
 
-
-body {
-    background-image: url("assets/world.svg");
-    background-position: 50% 15%;
-    background-size: 1000%;
+.svg-wrapper {
+    height: 100%;
+    left: 0;
+    overflow: hidden;
+    pointer-events: none;
+    position: absolute;
+    top: 0;
+    user-select: none;
+    width: 100%;
+    z-index: -1;
 }
 
 
