@@ -28,21 +28,6 @@ browser.runtime.getPlatformInfo()
 // Background script messaging
 let port: ReturnType<typeof messages.connect>;
 
-// TODO: Convert API lat/long to x/y instead?
-const mullvadCountryMap: { [k: string]: string } = {
-    "Austria": "at"              , "Australia": "au"      , "Belgium": "be"
-  , "Bulgaria": "bg"             , "Brazil": "br"         , "Canada": "ca"
-  , "Switzerland": "ch"          , "Czechia": "cz"        , "Germany": "de"
-  , "Denmark": "dk"              , "Spain": "es"          , "Finland": "fi"
-  , "France": "fr"               , "United Kingdom": "gb" , "Hong Kong": "hk"
-  , "Hungary": "hu"              , "Ireland": "ie"        , "Italy": "it"
-  , "Japan": "jp"                , "Luxembourg": "lu"     , "Latvia": "lv"
-  , "Republic of Moldova": "md"  , "Netherlands": "nl"    , "Norway": "no"
-  , "New Zealand": "nz"          , "Poland": "pl"         , "Romania": "ro"
-  , "Serbia": "rs"               , "Sweden": "se"         , "Singapore": "sg"
-  , "United States": "us"
-};
-
 
 interface PopupAppState {
     isLoading: boolean;
@@ -149,13 +134,6 @@ class PopupApp extends React.Component<
 
             path.style.removeProperty("fill");
         }*/
-    }
-
-    async componentDidUpdate () {
-        if (this.state.connectionDetails) {
-            this.focusCountry(mullvadCountryMap[
-                    this.state.connectionDetails.country]);
-        }
     }
 
     async componentDidMount () {
@@ -412,6 +390,18 @@ class PopupApp extends React.Component<
           , selectedServer: matchingServer?.socks_name
           , connectionDetails: details
           , isUpdating: false
+        }, () => {
+            if (this.state.connectionDetails) {
+                this.focusCountry(mullvadApi.COUNTRY_NAME_MAP[
+                        this.state.connectionDetails.country]);
+
+                port.postMessage({
+                    subject: "background:/updateConnectionDetails"
+                  , data: {
+                        details: this.state.connectionDetails
+                    }
+                });
+            }
         });
     }
 

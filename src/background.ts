@@ -191,6 +191,10 @@ function disableProxy (notify = false) {
         path: browser.runtime.getURL("icons/unlocked.svg")
     });
 
+    browser.browserAction.setBadgeText({
+        text: null
+    });
+
     if (isChromium) {
         chrome.proxy.onProxyError.removeListener(onProxyError);
         chrome.proxy.settings.clear({
@@ -242,17 +246,33 @@ messages.onConnect.addListener(port => {
                 });
 
                 await enableProxy(host, message.data.details);
+                sendPopupUpdate();
                 break;
             }
 
             case "background:/disconnect": {
                 await disableProxy(true);
+                sendPopupUpdate();
+                break;
+            }
+
+            case "background:/updateConnectionDetails": {
+                if (proxy && !proxyConnecting) {
+                    browser.browserAction.setBadgeText({
+                        text: mullvadApi.COUNTRY_NAME_MAP[
+                                message.data.details.country].toUpperCase()
+                    });
+                }
+
                 break;
             }
         }
-
-        sendPopupUpdate();
     });
 
     sendPopupUpdate();
+});
+
+
+browser.browserAction.setBadgeBackgroundColor({
+    color: "#ffd524"
 });

@@ -25,6 +25,12 @@ export type Messages = [
   , {
         subject: "background:/disconnect"
     }
+  , {
+        subject: "background:/updateConnectionDetails"
+      , data: {
+            details: ConnectionDetails
+        }
+    }
 ];
 
 export default new Messenger<Messages>();

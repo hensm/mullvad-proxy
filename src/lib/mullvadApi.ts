@@ -26,6 +26,20 @@ export function getFullSocksHost (serverName: string) {
 }
 
 
+export const COUNTRY_NAME_MAP: { [k: string]: string } = {
+    "Austria": "at"              , "Australia": "au"      , "Belgium": "be"
+  , "Bulgaria": "bg"             , "Brazil": "br"         , "Canada": "ca"
+  , "Switzerland": "ch"          , "Czechia": "cz"        , "Germany": "de"
+  , "Denmark": "dk"              , "Spain": "es"          , "Finland": "fi"
+  , "France": "fr"               , "United Kingdom": "gb" , "Hong Kong": "hk"
+  , "Hungary": "hu"              , "Ireland": "ie"        , "Italy": "it"
+  , "Japan": "jp"                , "Luxembourg": "lu"     , "Latvia": "lv"
+  , "Republic of Moldova": "md"  , "Netherlands": "nl"    , "Norway": "no"
+  , "New Zealand": "nz"          , "Poland": "pl"         , "Romania": "ro"
+  , "Serbia": "rs"               , "Sweden": "se"         , "Singapore": "sg"
+  , "United States": "us"
+};
+
 export interface ConnectionDetails {
     ip: string;
     country: string;
