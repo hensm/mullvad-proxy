@@ -1,4 +1,4 @@
-<img src="preview.png" align="right" width="340" height="399">
+<img src="preview.png" align="right" width="352" height="411">
 
 # Mullvad Proxy
 
