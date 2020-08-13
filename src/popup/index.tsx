@@ -70,27 +70,43 @@ class PopupApp extends React.Component<
         req.open("GET", "assets/world.svg", false);
         req.send();
 
-        this.svgWrapper = document.createElement("div");
-        this.svgElement = req.responseXML!.querySelector("svg")!;
+        const svgWrapper = document.createElement("div");
+        const svgElement = req.responseXML!.querySelector("svg")!;
 
-        this.svgWrapper.classList.add("svg-wrapper");
-        this.svgWrapper.append(this.svgElement);
-        document.body.append(this.svgWrapper);
+        svgWrapper.classList.add("svg-wrapper");
+        svgWrapper.append(svgElement);
+        document.body.append(svgWrapper);
 
-        for (const path of this.svgElement.children) {
-            const wrapperRect = this.svgWrapper.getBoundingClientRect();
-            const pathRect = path.getBoundingClientRect();
+        // Chromium doesn't guarantee correct layout?
+        const ensureLayout = () => {
+            if (svgWrapper.offsetLeft !== 0
+             || svgWrapper.offsetTop !== 0) {
+                window.requestAnimationFrame(ensureLayout);
+                return;
+            }
 
-            // Normalize
-            path.id = path.id.toLowerCase();
+            const wrapperRect = svgWrapper.getBoundingClientRect();
+            const svgRect = svgElement.getBoundingClientRect();
 
-            this.pathOffsets.set(path.id, [
-                ((wrapperRect.x + (wrapperRect.width / 2))
-                        - (pathRect.x + (pathRect.width / 2)))
-              , ((wrapperRect.y + (wrapperRect.height / 2))
-                        - (pathRect.y + (pathRect.height / 2)))
-            ]);
-        }
+            for (const path of svgElement.children) {
+                const pathRect = path.getBoundingClientRect();
+
+                // Normalize
+                path.id = path.id.toLowerCase();
+
+                this.pathOffsets.set(path.id, [
+                    ((wrapperRect.x + (wrapperRect.width / 2))
+                            - (pathRect.x + (pathRect.width / 2)))
+                  , ((wrapperRect.y + (wrapperRect.height / 2))
+                            - (pathRect.y + (pathRect.height / 2)))
+                ]);
+            }
+        };
+
+        ensureLayout();
+
+        this.svgWrapper = svgWrapper;
+        this.svgElement = svgElement;
 
 
         // Event handlers
@@ -121,7 +137,7 @@ class PopupApp extends React.Component<
         if (!this.svgElement.style.transition) {
             setTimeout(() => {
                 this.svgElement.style.transition = "transform 400ms ease";
-            });
+            }, 50);
         }
 
         // TODO: Offer as option?        
