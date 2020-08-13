@@ -271,8 +271,3 @@ messages.onConnect.addListener(port => {
 
     sendPopupUpdate();
 });
-
-
-browser.browserAction.setBadgeBackgroundColor({
-    color: "#ffd524"
-});
