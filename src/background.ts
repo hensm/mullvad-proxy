@@ -55,6 +55,10 @@ utils.isChromium()
         // Ensure Chrome proxy settings are cleared
         if (isChromium) {
             disableProxy();
+        } else {
+            browser.browserAction.setBadgeBackgroundColor({
+                color: "#294d73"
+            });
         }
     });
 
