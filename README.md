@@ -40,3 +40,11 @@ npm run build
 
 * `npm run package`  
   Builds and packages extension as an XPI archive. Outputs to `web-ext-artifacts/`.
+
+
+## Credits
+
+Icons by [icons8](https://icons8.com):
+* `src/icons/icons8-cancel-120.png`
+* `src/icons/icons8-ok-120.png`
+* `src/icons/icons8-warn-120.png`

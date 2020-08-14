@@ -19,6 +19,7 @@ const notifConnectionSucceeded = (host = "host")
     title: _("notificationConnectionSucceededTitle")
   , message: _("notificationConnectionSucceededMessage", host)
   , type: "basic"
+  , iconUrl: "icons/icons8-ok-120.png"
 });
 
 // If proxy server is unreachable or misc connection error
@@ -27,6 +28,7 @@ const notifConnectionFailed = (host = "host")
     title: _("notificationConnectionFailedTitle")
   , message: _("notificationConnectionFailedMessage", host)
   , type: "basic"
+  , iconUrl: "icons/icons8-warn-120.png"
 });
 
 // If user is not connected to a Mullvad VPN server
@@ -34,6 +36,7 @@ const notifConnectionFailedNonMullvad: CreateNotificationOptions = {
     title: _("notificationConnectionFailedTitle")
   , message: _("notificationConnectionFailedMessageNonMullvad")
   , type: "basic"
+  , iconUrl: "icons/icons8-warn-120.png"
 };
 
 // If proxy is manually disconnected
@@ -42,7 +45,18 @@ const notifConnectionDisconnected = (host = "host")
     title: _("notificationConnectionDisconnectedTitle")
   , message: _("notificationConnectionDisconnectedMessage", host)
   , type: "basic"
+  , iconUrl: "icons/icons8-cancel-120.png"
 });
+
+let lastNotificationId: string;
+async function showNotification (options: CreateNotificationOptions) {
+    if (lastNotificationId) {
+        browser.notifications.clear(lastNotificationId);
+    }
+
+    lastNotificationId = await browser.notifications.create(options);
+    return lastNotificationId;
+}
 
 
 let isChromium: boolean;
@@ -74,8 +88,7 @@ function onProxyRequest (_details: browser.proxy._OnRequestDetails) {
 
 function onProxyError (...args: any[]) {
     logger.error("Proxy error!", args);
-    browser.notifications.create(
-            notifConnectionFailed(proxy?.host));
+    showNotification(notifConnectionFailed(proxy?.host));
     disableProxy();
 }
 
@@ -114,7 +127,7 @@ async function enableProxy (
     // Quit if not connected to a Mullvad server
     if (!details.mullvad_exit_ip) {
         logger.error("Not connected via Mullvad!");
-        browser.notifications.create(notifConnectionFailedNonMullvad);
+        showNotification(notifConnectionFailedNonMullvad);
         await disableProxy();
         return;
     }
@@ -160,8 +173,7 @@ async function enableProxy (
 
         logger.info(`IP address: ${address}`);
 
-        browser.notifications.create(
-                notifConnectionSucceeded(proxy.host));
+        showNotification(notifConnectionSucceeded(proxy.host));
 
         browser.browserAction.setIcon({
             path: browser.runtime.getURL("icons/locked.svg")
@@ -172,8 +184,7 @@ async function enableProxy (
         // Only handle request errors for the current fetch
         if (proxy?.host === host) {
             logger.error("Proxy request failed!");
-            browser.notifications.create(
-                    notifConnectionFailed(proxy.host));
+            showNotification(notifConnectionFailed(proxy.host));
 
             await disableProxy();
         }
@@ -187,8 +198,7 @@ async function enableProxy (
  */
 async function disableProxy (notify = false) {
     if (notify) {
-        browser.notifications.create(
-                notifConnectionDisconnected(proxy?.host));
+        showNotification(notifConnectionDisconnected(proxy?.host));
     }
 
     browser.browserAction.setIcon({
