@@ -1,0 +1,45 @@
+button,
+select {
+    --background-normal: rgb(17, 40, 65);
+    --background-hover: rgb(37, 60, 85);
+    --background-active: rgb(47, 70, 95);
+
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--background-normal);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    color: white;
+    font: inherit;
+    height: 28px;
+    margin: initial;
+    padding: 0 8px;
+}
+
+button:hover:not(:disabled),
+select:hover:not(:disabled) {
+    background-color: var(--background-hover);
+}
+
+button:hover:active,
+select:hover:active {
+    background-color: var(--background-active);
+}
+
+button:disabled,
+select:disabled {
+    opacity: 0.35;
+}
+
+select {
+    background-image: url("assets/icon-expand.svg");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+}
+
+
+.control__disconnect {
+    --background-normal: rgb(145, 41, 38);
+    --background-hover: rgb(165, 61, 58);
+    --background-active: rgb(175, 71, 68);
+}
