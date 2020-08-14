@@ -174,7 +174,8 @@ class PopupApp extends React.Component<
 
                         return prevState;
                     }, () => {
-                        if (this.state.proxy?.isConnected && this.state.serverMap) {
+                        if (!this.state.proxy?.isConnecting
+                          && this.state.serverMap) {
                             this.updateConnectionDetails();
                         }
                     });
@@ -467,8 +468,6 @@ class PopupApp extends React.Component<
         port.postMessage({
             subject: "background:/disconnect"
         });
-
-        this.updateConnectionDetails();
     }
 }
 

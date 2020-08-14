@@ -78,8 +78,9 @@ function onProxyError (...args: any[]) {
 
 /**
  * Checks current connection is valid and sets up proxy request
- * listener. If client isn't connected via Mullvad, proxy
- * connection is aborted and user is notified.
+ * listener (or in Chromium, sets the browser proxy settings).
+ * If client isn't connected via Mullvad, proxy connection is
+ * aborted and user is notified.
  */
 async function enableProxy (
         host: string
@@ -119,8 +120,6 @@ async function enableProxy (
      * granular control over which requests are proxied, whereas
      * Chrome is more limited, only allowing basic, declarative
      * customizations.
-     *
-     * TODO: Investigate edge cases
      */
     if (isChromium) {
         logger.info("Proxy registered", proxy);
@@ -179,9 +178,10 @@ async function enableProxy (
 
 
 /**
- * Removes proxy request listener.
+ * Removes proxy request listener, (or in Chromium, clears the
+ * browser proxy settings).
  */
-function disableProxy (notify = false) {
+async function disableProxy (notify = false) {
     if (notify) {
         browser.notifications.create(
                 notifConnectionDisconnected(proxy?.host));
@@ -196,9 +196,11 @@ function disableProxy (notify = false) {
     });
 
     if (isChromium) {
-        chrome.proxy.onProxyError.removeListener(onProxyError);
-        chrome.proxy.settings.clear({
-            scope: "regular"
+        await new Promise(resolve => {
+            chrome.proxy.onProxyError.removeListener(onProxyError);
+            chrome.proxy.settings.clear({
+                scope: "regular"
+            }, resolve);
         });
     } else {
         browser.proxy.onError.removeListener(onProxyError);
