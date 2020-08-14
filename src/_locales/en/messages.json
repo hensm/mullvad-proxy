@@ -84,11 +84,15 @@
     }
 
   , "popupSelectionCountryPlaceholder": {
-        "message": "Select country..."
+        "message": "Select country"
       , "description": "Placeholder text for country combo box."
     }
+  , "popupSelectionCountryRecentServers": {
+        "message": "Recently used"
+      , "description": "Optgroup title within country selection"
+    }
   , "popupSelectionServerPlaceholder": {
-        "message": "Select server..."
+        "message": "Select server"
       , "description": "Placeholder text for server combo box."
     }
   , "popupSelectionConnect": {

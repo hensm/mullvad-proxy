@@ -35,6 +35,12 @@ select {
     background-image: url("assets/icon-expand.svg");
     background-position: right 8px center;
     background-repeat: no-repeat;
+    padding-right: 32px;
+    text-overflow: ellipsis;
+}
+
+optgroup {
+    background-color: rgb(57, 80, 105);
 }
 
 

@@ -28,6 +28,12 @@ browser.runtime.getPlatformInfo()
 // Background script messaging
 let port: ReturnType<typeof messages.connect>;
 
+const localStorage = new TypedStorageArea<{
+    serverList: mullvadApi.Server[];
+    serverListFrom: number;
+    recentServers: mullvadApi.Server[];
+}>(browser.storage.local);
+
 
 interface PopupAppState {
     isLoading: boolean;
@@ -41,9 +47,9 @@ interface PopupAppState {
 
     connectionDetails?: mullvadApi.ConnectionDetails;
 
-    serverMap?: Map<string, mullvadApi.Server[]>;
     selectedCountry?: string;
     selectedServer?: string;
+    recentServers: mullvadApi.Server[];
 }
 
 class PopupApp extends React.Component<
@@ -56,8 +62,11 @@ class PopupApp extends React.Component<
             isConnected: false
           , isConnecting: false
         }
+      , recentServers: []
     };
 
+
+    private serverMap?: Map<string, mullvadApi.Server[]>;
 
     private pathOffsets = new Map<string, [number, number]>();
     private svgWrapper: HTMLDivElement;
@@ -179,8 +188,7 @@ class PopupApp extends React.Component<
 
                         return prevState;
                     }, () => {
-                        if (!this.state.proxy?.isConnecting
-                          && this.state.serverMap) {
+                        if (!this.state.proxy?.isConnecting && this.serverMap) {
                             this.updateConnectionDetails();
                         }
                     });
@@ -190,11 +198,6 @@ class PopupApp extends React.Component<
             }
         });
 
-
-        const localStorage = new TypedStorageArea<{
-            serverList: mullvadApi.Server[]
-          , serverListFrom: number;
-        }>(browser.storage.local);
 
         let { serverList, serverListFrom } = await localStorage.get(
                 [ "serverList", "serverListFrom" ]);
@@ -241,8 +244,30 @@ class PopupApp extends React.Component<
             serverMap.set(server.country_code, countryServers);
         }
 
+
+        const { recentServers } = await localStorage.get("recentServers");
+        recentServers?.forEach((server, i) => {
+            const siblingServers = serverMap.get(server.country_code);
+            const matchingServer = siblingServers?.find(
+                    sibling => sibling.socks_name === server.socks_name);
+
+            /**
+             * If recent server cannot be found, remove it, else update
+             * with newer info.
+             */
+            if (!matchingServer) {
+                recentServers.splice(i, 1);
+            } else {
+                recentServers.splice(i, 1, matchingServer);
+            }
+        });
+
+
+        this.serverMap = serverMap;
+
+
         this.setState({
-            serverMap
+            recentServers
           , isLoading: false
         }, () => {
             this.updateConnectionDetails();
@@ -303,9 +328,11 @@ class PopupApp extends React.Component<
                           // Disabled if not in a usable state
                           disabled={ this.state.isLoading
                                   || this.state.proxy?.isConnecting
-                                  || !this.state.serverMap }>
+                                  || !this.serverMap }>
 
-                    <select className="selection__country"
+                    <select className={ `selection__country ${
+                                !this.state.selectedCountry && "selection__country--default"}` }
+                            title={ _("popupSelectionCountryPlaceholder") }
                             value={ this.state.selectedCountry }
                             onChange={ this.handleCountryChange }>
 
@@ -315,14 +342,24 @@ class PopupApp extends React.Component<
                             { _("popupSelectionCountryPlaceholder") }
                         </option>
 
-                        { this.state.serverMap && Array.from(
-                                this.state.serverMap.entries()).map(([countryCode, server], i) =>
+                        { this.state.recentServers &&
+                            <optgroup label={ _("popupSelectionCountryRecentServers") }>
+                                { this.state.recentServers.map(server =>
+                                    <option value={ server.socks_name }>
+                                        { server.country_name } ({ server.socks_name })
+                                    </option>) }
+                            </optgroup> }
+
+                        { this.serverMap && Array.from(
+                                this.serverMap.entries()).map(([countryCode, server], i) =>
                             <option value={ countryCode } key={i}>
                                 { server[0].country_name }
                             </option> )}
                     </select>
 
-                    <select className="selection__server"
+                    <select className={ `selection__server ${
+                                !this.state.selectedServer && "selection__server--default"}` }
+                            title={ _("popupSelectionServerPlaceholder") }
                             disabled={ !this.state.selectedCountry }
                             value={ this.state.selectedServer }
                             onChange={ this.handleServerChange }>
@@ -333,7 +370,7 @@ class PopupApp extends React.Component<
                             { _("popupSelectionServerPlaceholder") }
                         </option>
 
-                        { this.state.selectedCountry && this.state.serverMap?.get(
+                        { this.state.selectedCountry && this.serverMap?.get(
                                 this.state.selectedCountry)?.map((server, i) => 
                             <option value={ server.socks_name } key={i}>
                                 { server.socks_name } ({ server.city_name })
@@ -381,7 +418,7 @@ class PopupApp extends React.Component<
     }
 
     private async updateConnectionDetails () {
-        if (!this.state.serverMap) {
+        if (!this.serverMap) {
             return;
         }
 
@@ -397,7 +434,7 @@ class PopupApp extends React.Component<
         }
 
         let matchingServer: mullvadApi.Server | undefined;
-        for (const [, countryServers ] of this.state.serverMap) {
+        for (const [, countryServers ] of this.serverMap) {
             const match = countryServers.find(server =>
                     this.state.proxy?.host?.startsWith(server.socks_name));
 
@@ -430,6 +467,23 @@ class PopupApp extends React.Component<
     private handleCountryChange (
             ev: React.ChangeEvent<HTMLSelectElement>) {
 
+        // Handle recents
+        if (ev.target.value.length > 2) {
+            const matchingServer = this.state.recentServers.find(
+                    server => server.socks_name === ev.target.value);
+
+            if (!matchingServer) {
+                return;
+            }
+
+            this.setState({
+                selectedCountry: matchingServer.country_code
+              , selectedServer: matchingServer.socks_name
+            });
+
+            return;
+        }
+
         this.setState({
             selectedCountry: ev.target.value
           , selectedServer: undefined
@@ -445,7 +499,7 @@ class PopupApp extends React.Component<
     }
 
 
-    private handleConnectClick () {
+    private async handleConnectClick () {
         if (!this.state.connectionDetails) {
             return;
         }
@@ -466,6 +520,36 @@ class PopupApp extends React.Component<
                   , details: this.state.connectionDetails
                 }
             });
+        }
+
+        // Update recent servers
+        if (this.state.selectedCountry) {
+            const recentServers = (await localStorage
+                    .get("recentServers")).recentServers ?? [];
+
+            const newRecentServer = this.serverMap
+                ?.get(this.state.selectedCountry)
+                ?.find(server => server.socks_name
+                             === this.state.selectedServer);
+
+            if (newRecentServer) {
+                // Remove existing to be repositioned
+                const existingIndex = recentServers.findIndex(server =>
+                        server.socks_name === newRecentServer.socks_name);
+                if (existingIndex !== -1) {
+                    recentServers.splice(existingIndex, 1);
+                }
+
+                recentServers.unshift(newRecentServer);
+
+                // Maintain max of three recent servers
+                if (recentServers.length > 3) {
+                    recentServers.pop();
+                }
+
+                await localStorage.set({ recentServers });
+                this.setState({ recentServers });
+            }
         }
     }
 

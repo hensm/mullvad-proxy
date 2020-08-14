@@ -145,6 +145,11 @@ body {
     width: 100%;
 }
 
+.selection__country--default:not(:focus):not(:active):not(:disabled),
+.selection__server--default:not(:focus):not(:active):not(:disabled) {
+    color: rgba(255, 255, 255, 0.75);
+}
+
 .selection__connect {
     margin-inline-start: auto;
 }
