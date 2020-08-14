@@ -36,7 +36,7 @@ npm run build
   Same as `build`, but also rebuilds on file changes.
 
 * `npm run start`  
-  Starts a development instance of Firefox with the built extension (from `dist/`) installed. To use with other browsers, see the `-t`/`--target` option.
+  Starts a development instance of Firefox with the built extension (from `dist/`) installed. To use with other browsers, use `start:chrome` or `start:edge` scripts, or see the `-t`/`--target` web-ext option.
 
 * `npm run package`  
   Builds and packages extension as an XPI archive. Outputs to `web-ext-artifacts/`.
