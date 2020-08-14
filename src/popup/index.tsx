@@ -78,13 +78,20 @@ class PopupApp extends React.Component<
         document.body.append(svgWrapper);
 
         // Chromium doesn't guarantee correct layout?
-        const ensureLayout = () => {
+        const ensureLayout = (cb: () => void) => {
             if (svgWrapper.offsetLeft !== 0
              || svgWrapper.offsetTop !== 0) {
-                window.requestAnimationFrame(ensureLayout);
+                window.requestAnimationFrame(() => {
+                    ensureLayout(cb);
+                });
+
                 return;
             }
 
+            cb();
+        };
+
+        ensureLayout(() => {
             const wrapperRect = svgWrapper.getBoundingClientRect();
             const svgRect = svgElement.getBoundingClientRect();
 
@@ -101,9 +108,7 @@ class PopupApp extends React.Component<
                             - (pathRect.y + (pathRect.height / 2)))
                 ]);
             }
-        };
-
-        ensureLayout();
+        });
 
         this.svgWrapper = svgWrapper;
         this.svgElement = svgElement;
