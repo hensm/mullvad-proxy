@@ -3,6 +3,8 @@
     "watch": "webpack --watch",
     "build": "webpack",
     "start": "web-ext run -s ./dist",
+    "start:chrome": "npm run start -- -t chromium",
+    "start:edge": "npm run start:chrome -- --chromium-binary \"C:\\Program Files (x86)\\Microsoft\\Edge\\Application\\msedge.exe\"",
     "package": "web-ext build -s ./dist"
   },
   "devDependencies": {
