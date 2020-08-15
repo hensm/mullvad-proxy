@@ -2,6 +2,7 @@
 
 import React from "react";
 import ReactDOM from "react-dom";
+import afterFrame from "afterframe";
 
 import messages from "../messages";
 
@@ -86,21 +87,7 @@ class PopupApp extends React.Component<
         svgWrapper.append(svgElement);
         document.body.append(svgWrapper);
 
-        // Chromium doesn't guarantee correct layout?
-        const ensureLayout = (cb: () => void) => {
-            if (svgWrapper.offsetLeft !== 0
-             || svgWrapper.offsetTop !== 0) {
-                window.requestAnimationFrame(() => {
-                    ensureLayout(cb);
-                });
-
-                return;
-            }
-
-            cb();
-        };
-
-        ensureLayout(() => {
+        afterFrame(() => {
             const wrapperRect = svgWrapper.getBoundingClientRect();
             const svgRect = svgElement.getBoundingClientRect();
 
@@ -140,30 +127,15 @@ class PopupApp extends React.Component<
                 this.pathOffsets.get(countryCode)!;
 
         this.svgElement.style.transform =
-                `translate(${translateX}px, ${
-                             translateY}px)`;
+                `translate(${translateX}px, ${translateY}px)`;
 
-        /**
-         * Only set transition after first transform has been set,
-         * timeout needed so transition doesn't apply to that
-         * transform.
-         */
+        // Set transition only on first iteration after transform
         if (!this.svgElement.style.transition) {
-            setTimeout(() => {
+            afterFrame(() => {
                 this.svgElement.style.transition = "transform 400ms ease";
-            }, 50);
+                this.svgElement.style.visibility = "visible";
+            });
         }
-
-        // TODO: Offer as option?        
-        /*const paths = this.svgElement.querySelectorAll("path");
-        for (const path of paths) {
-            if (path.id === countryCode) {
-                path.style.fill = "#44ad4d";
-                continue;
-            }
-
-            path.style.removeProperty("fill");
-        }*/
     }
 
     async componentDidMount () {

@@ -51,6 +51,7 @@ body {
     position: absolute;
     top: 0;
     user-select: none;
+    visibility: hidden;
     width: 100%;
     z-index: -1;
 }
