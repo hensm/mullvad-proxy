@@ -176,7 +176,11 @@ async function enableProxy (
         showNotification(notifConnectionSucceeded(proxy.host));
 
         browser.browserAction.setIcon({
-            path: browser.runtime.getURL("icons/locked.svg")
+            path: {
+                16: "icons/locked-16.png"
+              , 24: "icons/locked-24.png"
+              , 32: "icons/locked-32.png"
+            }
         });
 
         proxyConnecting = false;
@@ -202,7 +206,11 @@ async function disableProxy (notify = false) {
     }
 
     browser.browserAction.setIcon({
-        path: browser.runtime.getURL("icons/unlocked.svg")
+        path: {
+            "16": "icons/unlocked-16.png"
+          , "24": "icons/unlocked-24.png"
+          , "32": "icons/unlocked-32.png"
+        }
     });
 
     browser.browserAction.setBadgeText({

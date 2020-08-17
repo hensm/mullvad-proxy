@@ -19,7 +19,11 @@
     }
 
   , "browser_action": {
-        "default_icon": "icons/unlocked.svg"
+        "default_icon": {
+            "16": "icons/unlocked-16.png"
+          , "24": "icons/unlocked-24.png"
+          , "32": "icons/unlocked-32.png"
+        }
       , "default_popup": "popup/index.html"
     }
 
