@@ -7,4 +7,5 @@ export default {
     autoConnect: false
   , autoConnectServer: ""
   , persistConnectionState: false
+  , showDebugInfo: false
 } as Options;

@@ -1,46 +1,6 @@
-:root {
-    --mullvad-blue: #294d73;
-    --mullvad-dark-blue: #192e45;
-    --mullvad-green: #44ad4d;
-    --mullvad-red: #e34039;
-    --mullvad-logo-yellow: #ffd524;
-    --mullvad-logo-brown: #d2943b;
-    --mullvad-logo-beige: #ffcd86;
-
-    --system-font: system-ui
-          , -apple-system, BlinkMacSystemFont
-          , "Segoe UI", Robot, Helvetica, Arial, sans-serif
-          , "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
-}
-
-html {
-    background-color: black;
-}
-
-* {
-    box-sizing: border-box;
-}
-
-button,
-select {
-    font: inherit;
-    margin: initial;
-}
-
 body {
-    background-color: var(--mullvad-dark-blue);
-    color: white;
-    display: flex;
-    flex-direction: column;
-    font-family: var(--system-font);
-    font-size: 15px;
-    gap: 20px;
     height: 350px;
-    margin: initial;
     min-width: 300px;
-    padding: 20px;
-    position: relative;
-    z-index: -1;
 }
 
 .svg-wrapper {
@@ -104,8 +64,11 @@ body {
 }
 
 .connection__status {
-    text-transform: uppercase;
+    align-items: center;
+    display: flex;
     font-weight: bold;
+    gap: 5px;
+    text-transform: uppercase;
 }
 
 .connection__status--connected {
@@ -116,6 +79,20 @@ body {
 }
 .connection__status--not-connected {
     color: var(--mullvad-red);
+}
+
+.connection__info {
+    background-image: url("assets/icons8-info(1).svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 15px;
+    opacity: 0.5;
+    height: 15px;
+    width: 15px;
+}
+
+.connection__info:hover {
+    opacity: 0.75;
 }
 
 .connection > .loader {
@@ -177,4 +154,58 @@ body {
 .control__connect,
 .control__disconnect {
     width: 100%;
+}
+
+/* Panel */
+
+html, body {
+    max-height: 100%;
+    overflow: hidden;
+}
+
+.panel {
+    background-color: var(--mullvad-dark-blue);
+    bottom: 0;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    left: 0;
+    opacity: 0;
+    position: absolute;
+    transform: translateY(100%);
+    transition: 200ms ease;
+    transition-property: transform, opacity;
+    user-select: none;
+    width: 100%;
+    z-index: 9999;
+}
+
+.panel.panel--visible {
+    transform: translateY(0);
+    opacity: 1;
+}
+
+@media (prefers-reduced-motion: reduced) {
+    .panel {
+        transition: initial !important
+    }
+}
+
+.panel__header {
+    background-color: rgba(0, 0, 0, 0.25);
+    border-bottom: 1px solid var(--border-color);
+    align-items: center;
+    display: flex;
+    gap: 10px;
+    padding: 10px 20px;
+}
+
+.panel__title {
+    font-size: 1.2em;
+    flex: 1;
+    margin: initial;
+}
+
+.panel__content {
+    overflow-y: auto;
 }

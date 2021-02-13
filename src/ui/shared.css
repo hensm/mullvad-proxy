@@ -1,0 +1,132 @@
+:root {
+    --mullvad-blue: #294d73;
+    --mullvad-dark-blue: #192e45;
+    --mullvad-green: #44ad4d;
+    --mullvad-red: #e34039;
+    --mullvad-logo-yellow: #ffd524;
+    --mullvad-logo-brown: #d2943b;
+    --mullvad-logo-beige: #ffcd86;
+
+    --system-font: system-ui
+          , -apple-system, BlinkMacSystemFont
+          , "Segoe UI", Robot, Helvetica, Arial, sans-serif
+          , "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+}
+
+html {
+    background-color: black;
+}
+
+* {
+    box-sizing: border-box;
+}
+
+button,
+select {
+    font: inherit;
+    margin: initial;
+}
+
+body {
+    background-color: var(--mullvad-dark-blue);
+    color: white;
+    display: flex;
+    flex-direction: column;
+    font-family: var(--system-font);
+    font-size: 15px;
+    gap: 20px;
+    margin: initial;
+    padding: 20px;
+    position: relative;
+    z-index: -1;
+}
+
+
+/* Widgets */
+
+button,
+select {
+    --background-normal: rgb(17, 40, 65);
+    --background-hover: rgb(37, 60, 85);
+    --background-active: rgb(47, 70, 95);
+
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--background-normal);
+    border: 1px solid rgba(255, 255, 255, 0.25);
+    border-radius: 2px;
+    color: white;
+    font: inherit;
+    height: 28px;
+    margin: initial;
+    padding: 0 8px;
+}
+
+button:hover:not(:disabled),
+select:hover:not(:disabled) {
+    background-color: var(--background-hover);
+}
+
+button:hover:active,
+select:hover:active {
+    background-color: var(--background-active);
+}
+
+button:disabled,
+select:disabled {
+    opacity: 0.35;
+}
+
+select {
+    background-image: url("icon-expand.svg");
+    background-position: right 8px center;
+    background-repeat: no-repeat;
+    padding-right: 32px;
+    text-overflow: ellipsis;
+}
+
+optgroup {
+    background-color: rgb(57, 80, 105);
+}
+
+
+.control__disconnect {
+    --background-normal: rgb(145, 41, 38);
+    --background-hover: rgb(165, 61, 58);
+    --background-active: rgb(175, 71, 68);
+}
+
+
+input[type="text"],
+input[type="checkbox"] {
+    background-color: rgba(255, 255, 255, 0.25);
+    border: initial;
+    border-radius: 2px;
+    color: white;
+}
+
+input[type="text"] {
+    height: 28px;
+    padding: 0 8px;
+}
+
+input[type="checkbox"] {
+    appearance: none;
+    height: 20px;
+    position: relative;
+    width: 20px;
+}
+
+input[type="checkbox"]:checked::before {
+    background-image: url("icon-check.svg");
+    background-position: center;
+    background-size: 16px;
+    content: "";
+    display: block;
+    height: 16px;
+    width: 16px;
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+}

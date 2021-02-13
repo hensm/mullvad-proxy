@@ -16,6 +16,7 @@ export interface Options {
     autoConnect: boolean;
     autoConnectServer: string;
     persistConnectionState: boolean;
+    showDebugInfo: boolean;
 
     [key: string]: Options[keyof Options];
 }

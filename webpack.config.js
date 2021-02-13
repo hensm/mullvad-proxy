@@ -10,7 +10,8 @@ const OUTPUT_PATH = path.resolve(__dirname, "dist");
 module.exports = {
     entry: {
         "background": `${INCLUDE_PATH}/background.ts`
-      , "popup/popup": `${INCLUDE_PATH}/popup/index.tsx`
+      , "ui/popup/popup": `${INCLUDE_PATH}/ui/popup/index.tsx`
+      , "ui/options/options": `${INCLUDE_PATH}/ui/options/index.tsx`
     }
   , output: {
         filename: "[name].bundle.js"

@@ -24,7 +24,7 @@
           , "24": "icons/unlocked-24.png"
           , "32": "icons/unlocked-32.png"
         }
-      , "default_popup": "popup/index.html"
+      , "default_popup": "ui/popup/index.html"
     }
 
   , "background": {
@@ -37,6 +37,10 @@
   , "icons": {
         "48": "icons/locked.svg"
       , "96": "icons/locked.svg"
+    }
+
+  , "options_ui": {
+        "page": "ui/options/index.html"
     }
 
   , "permissions": [

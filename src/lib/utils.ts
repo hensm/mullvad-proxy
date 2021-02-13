@@ -1,23 +1,28 @@
 "use strict";
 
 
-export async function isChromium () {
+export enum BrowserType {
+    Chromium,
+    Firefox,
+    Unknown
+}
+
+export async function getBrowserType () {
     // Workaround types
     type GetBrowserInfo = () => Promise<browser.runtime.BrowserInfo>;
     const getBrowserInfo: (GetBrowserInfo | undefined) =
             (browser.runtime.getBrowserInfo as any);
-
+    
     if (getBrowserInfo) {
         const browserInfo = await getBrowserInfo();
 
         switch (browserInfo.name.toLowerCase()) {
-            case "firefox": {
-                return false;
-            };
+            case "firefox": return BrowserType.Firefox;
+            default:        return BrowserType.Unknown;
         }
     }
 
-    return true;
+    return BrowserType.Chromium;
 }
 
 
