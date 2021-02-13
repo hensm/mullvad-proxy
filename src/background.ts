@@ -74,19 +74,26 @@ async function showNotification (options: CreateNotificationOptions) {
 let isChromium: boolean;
 const { chrome } = (window as any);
 
-utils.isChromium()
-    .then(res => {
-        isChromium = res;
+utils.getBrowserType().then(type => {
+    isChromium = type === utils.BrowserType.Chromium;
 
-        // Ensure Chrome proxy settings are cleared
-        if (isChromium) {
+    switch (type) {
+        case utils.BrowserType.Chromium: {
             disableProxy();
-        } else {
+            break;
+        }
+        case utils.BrowserType.Firefox: {
             browser.browserAction.setBadgeBackgroundColor({
                 color: "#294d73"
             });
+            break;
         }
-    });
+
+        default: {
+            logger.error("Failed to detect browser type.");
+        }
+    }
+})
 
 
 // Current proxy details

@@ -77,6 +77,15 @@
         "message": "Not Connected"
       , "description": "Connection status displayed whilst not connected to a proxy server."
     }
+  
+    , "popupConnectionTypeWireGuard": {
+          "message": "via WireGuard"
+        , "description": "Title text for connection info item."
+      }
+  , "popupConnectionTypeOpenVPN": {
+        "message": "via OpenVPN"
+      , "description": "Title text for connection info item."
+    }
 
   , "popupConnectionCityPlaceholder": {
         "message": "Somewhere"
@@ -117,6 +126,10 @@
         "message": "Options"
       , "description": "Popup options panel header title."
     }
+  , "optionsPanelViewInTab": {
+        "message": "View in tab"
+      , "description": "Popup options panel header tab button"
+    }
   , "optionsPanelClose": {
         "message": "Close"
       , "description": "Popup options panel header close button"
@@ -132,7 +145,7 @@
       , "description": "Auto-connect option label."
     }
   , "optionsAutoConnectDescription": {
-        "message": "When not manually connected to a proxy, connect automatically to either the current region's proxy server or a user-specified server."
+        "message": "When not manually connected to a proxy, connect automatically to either the current region's proxy or a user-specified server."
       , "description": "Auto-connect option description."
     }
 
@@ -147,10 +160,19 @@
 
   , "optionsPersistConnectionStateLabel": {
         "message": "Persist connection state"
-      , "description": "Auto-connect option label."
+      , "description": "Persist connection state option label."
     }
   , "optionsPersistConnectionStateDescription": {
         "message": "Persist proxy settings between browser/extension restarts."
-      , "description": "Auto-connect option description."
+      , "description": "Persist connection state option description."
+    }
+
+  , "optionsShowDebugInfoLabel": {
+        "message": "Show debug info"
+      , "description": "Show debug info option label."
+    }
+  , "optionsShowDebugInfoDescription": {
+        "message": "Show additional connection info and output more detailed logs."
+      , "description": "Show debug info option description."
     }
 }

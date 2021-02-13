@@ -4,12 +4,14 @@ import React from "react";
 import ReactDOM from "react-dom";
 import afterFrame from "afterframe";
 
-import messages from "../messages";
+import messages from "../../messages";
 
-import logger from "../lib/logger";
-import { getMinutesInMs } from "../lib/utils";
-import * as mullvadApi from "../lib/mullvadApi";
-import { TypedStorageArea } from "../lib/TypedStorageArea";
+import logger from "../../lib/logger";
+import options from "../../lib/options";
+
+import { getMinutesInMs } from "../../lib/utils";
+import * as mullvadApi from "../../lib/mullvadApi";
+import { TypedStorageArea } from "../../lib/TypedStorageArea";
 
 import { OptionsPanel } from "./options/OptionsPanel";
 
@@ -137,6 +139,13 @@ class PopupApp extends React.Component<
 
         this.svgElement.style.transform =
                 `translate(${translateX}px, ${translateY}px)`;
+
+        // Disable animation if reduced motion requested
+        const reducedMotionQuery = window.matchMedia(
+                "(prefers-reduced-motion: reduce)");
+        if (!reducedMotionQuery.matches) {
+            return;
+        }
 
         // Set transition only on first iteration after transform
         if (!this.svgElement.style.transition) {
@@ -278,7 +287,13 @@ class PopupApp extends React.Component<
                                         ? "connection__status--connecting"
                                         : "connection__status--not-connected"}`}>
                             { this.state.proxy?.isConnected
-                                ? _("popupConnectionStatusConnected")
+                                ? <>
+                                      { _("popupConnectionStatusConnected") }
+                                      <div className="connection__info"
+                                           title={ this.isViaWireGuard()
+                                               ? _("popupConnectionTypeWireGuard")
+                                               : _("popupConnectionTypeOpenVPN") }></div>
+                                  </>
                                 : this.state.proxy?.isConnecting
                                     ? <LoadingIndicator text={
                                               _("popupConnectionStatusConnecting") } />
