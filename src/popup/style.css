@@ -56,6 +56,19 @@ body {
     z-index: -1;
 }
 
+.options-button {
+    background: initial;
+    background-image: url("assets/icons8-settings.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    border: initial;
+    height: 30px;
+    position: absolute;
+    right: 15px;
+    top: 15px;
+    width: 30px;
+}
 
 .loader {
     --loader-size: 32px;

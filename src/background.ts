@@ -1,6 +1,8 @@
 "use strict";
 
 import logger from "./lib/logger";
+import options from "./lib/options";
+
 import * as utils from "./lib/utils";
 import * as mullvadApi from "./lib/mullvadApi";
 
@@ -8,6 +10,15 @@ import messages from "./messages";
 
 
 const _ = browser.i18n.getMessage;
+
+
+browser.runtime.onInstalled.addListener(async details => {
+    switch (details.reason) {
+        // Implicit defaults
+        case "install": await options.setAll(); break;
+        case "update":  await options.update(); break;
+    }
+})
 
 
 type CreateNotificationOptions =
@@ -32,12 +43,13 @@ const notifConnectionFailed = (host = "host")
 });
 
 // If user is not connected to a Mullvad VPN server
-const notifConnectionFailedNonMullvad: CreateNotificationOptions = {
+const notifConnectionFailedNonMullvad = ()
+        : CreateNotificationOptions => ({
     title: _("notificationConnectionFailedTitle")
   , message: _("notificationConnectionFailedMessageNonMullvad")
   , type: "basic"
   , iconUrl: "icons/icons8-warn-120.png"
-};
+});
 
 // If proxy is manually disconnected
 const notifConnectionDisconnected = (host = "host")
@@ -127,7 +139,7 @@ async function enableProxy (
     // Quit if not connected to a Mullvad server
     if (!details.mullvad_exit_ip) {
         logger.error("Not connected via Mullvad!");
-        showNotification(notifConnectionFailedNonMullvad);
+        showNotification(notifConnectionFailedNonMullvad());
         await disableProxy();
         return;
     }
