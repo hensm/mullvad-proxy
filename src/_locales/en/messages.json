@@ -112,4 +112,45 @@
         "message": "Reconnect"
       , "description": "Proxy server reconnect button text."
     }
+
+  , "optionsPanelTitle": {
+        "message": "Options"
+      , "description": "Popup options panel header title."
+    }
+  , "optionsPanelClose": {
+        "message": "Close"
+      , "description": "Popup options panel header close button"
+    }
+
+  , "optionsPanelOpen": {
+        "message": "Options"
+      , "description": "Popup options button title."
+    }
+
+  , "optionsAutoConnectLabel": {
+        "message": "Auto-connect"
+      , "description": "Auto-connect option label."
+    }
+  , "optionsAutoConnectDescription": {
+        "message": "When not manually connected to a proxy, connect automatically to either the current region's proxy server or a user-specified server."
+      , "description": "Auto-connect option description."
+    }
+
+  , "optionsAutoConnectServerLabel": {
+        "message": "Auto-connect custom server:"
+      , "description": "Auto-connect server option label."
+    }
+  , "optionsAutoConnectServerDescription": {
+        "message": "Leave blank to disable."
+      , "description": "Auto-connect server option description."
+    }
+
+  , "optionsPersistConnectionStateLabel": {
+        "message": "Persist connection state"
+      , "description": "Auto-connect option label."
+    }
+  , "optionsPersistConnectionStateDescription": {
+        "message": "Persist proxy settings between browser/extension restarts."
+      , "description": "Auto-connect option description."
+    }
 }

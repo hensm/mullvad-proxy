@@ -7,8 +7,11 @@ import afterFrame from "afterframe";
 import messages from "../messages";
 
 import logger from "../lib/logger";
+import { getMinutesInMs } from "../lib/utils";
 import * as mullvadApi from "../lib/mullvadApi";
 import { TypedStorageArea } from "../lib/TypedStorageArea";
+
+import { OptionsPanel } from "./options/OptionsPanel";
 
 
 const _ = browser.i18n.getMessage;
@@ -40,6 +43,8 @@ interface PopupAppState {
     isLoading: boolean;
     isUpdating: boolean;
 
+    isOptionsPanelOpen: boolean;
+
     proxy?: {
         isConnected: boolean;
         isConnecting: boolean;
@@ -59,6 +64,7 @@ class PopupApp extends React.Component<
     state: PopupAppState = {
         isLoading: true
       , isUpdating: false
+      , isOptionsPanelOpen: false
       , proxy: {
             isConnected: false
           , isConnecting: false
@@ -116,6 +122,9 @@ class PopupApp extends React.Component<
 
         this.handleConnectClick = this.handleConnectClick.bind(this);
         this.handleDisconnectClick = this.handleDisconnectClick.bind(this);
+
+        this.onOptionsPanelClose = this.onOptionsPanelClose.bind(this);
+        this.onOptionsPanelOpen = this.onOptionsPanelOpen.bind(this);
     }
 
     private focusCountry (countryCode: string) {
@@ -175,7 +184,7 @@ class PopupApp extends React.Component<
                 [ "serverList", "serverListFrom" ]);
 
         // Cache for five minutes
-        if (!serverList || (Date.now() - serverListFrom) > 300000) {
+        if (!serverList || (Date.now() - serverListFrom) > getMinutesInMs(5)) {
             serverList = await mullvadApi.fetchServerList();
             serverListFrom = Date.now();
 
@@ -381,6 +390,13 @@ class PopupApp extends React.Component<
                         { _("popupDisconnect") }
                     </button> }
             </fieldset>
+
+            <OptionsPanel open={ this.state.isOptionsPanelOpen }
+                          onClose={ this.onOptionsPanelClose } />
+            <button className="options-button"
+                    onClick={ this.onOptionsPanelOpen }
+                    title={ _("optionsPanelOpen") }>
+            </button>
         </>;
     }
 
@@ -529,6 +545,13 @@ class PopupApp extends React.Component<
         port.postMessage({
             subject: "background:/disconnect"
         });
+    }
+
+    private onOptionsPanelOpen () {
+        this.setState({ isOptionsPanelOpen: true });
+    }
+    private onOptionsPanelClose () {
+        this.setState({ isOptionsPanelOpen: false });
     }
 }
 
