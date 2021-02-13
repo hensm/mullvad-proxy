@@ -41,6 +41,13 @@ export class OptionsView extends React.Component<
         this.setState({
             options: await options.getAll()
         });
+
+        // Update options data if changed whilst page is open
+        options.addEventListener("changed", async () => {
+            this.setState({
+                options: await options.getAll()
+            })
+        })
     }
 
     render () {
