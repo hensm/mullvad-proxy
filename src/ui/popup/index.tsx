@@ -13,7 +13,7 @@ import { getMinutesInMs } from "../../lib/utils";
 import * as mullvadApi from "../../lib/mullvadApi";
 import { TypedStorageArea } from "../../lib/TypedStorageArea";
 
-import { OptionsPanel } from "./options/OptionsPanel";
+import { OptionsPanel } from "./OptionsPanel";
 
 
 const _ = browser.i18n.getMessage;

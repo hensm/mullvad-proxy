@@ -106,6 +106,7 @@ input[type="checkbox"] {
 }
 
 input[type="text"] {
+    font: inherit;
     height: 28px;
     padding: 0 8px;
 }

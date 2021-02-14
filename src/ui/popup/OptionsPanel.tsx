@@ -2,8 +2,8 @@
 
 import React from "react";
 
-import options, { Options } from "../../../lib/options";
-import { OptionsView } from "../../options/OptionsView"
+import options, { Options } from "../../lib/options";
+import { OptionsView } from "../options/OptionsView"
 
 
 const _ = browser.i18n.getMessage;
