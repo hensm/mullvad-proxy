@@ -143,7 +143,11 @@ class PopupApp extends React.Component<
         // Disable animation if reduced motion requested
         const reducedMotionQuery = window.matchMedia(
                 "(prefers-reduced-motion: reduce)");
-        if (!reducedMotionQuery.matches) {
+        if (reducedMotionQuery.matches) {
+            if (!this.svgElement.style.visibility) {
+                this.svgElement.style.visibility = "visible";
+            }
+
             return;
         }
 
