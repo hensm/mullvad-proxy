@@ -2,7 +2,6 @@
 
 import * as utils from "../../lib/utils";
 
-console.log("test")
 
 utils.getBrowserType().then(type => {
     const linkElement = document.createElement("link");
