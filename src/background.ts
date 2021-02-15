@@ -17,10 +17,19 @@ const _ = browser.i18n.getMessage;
 browser.runtime.onInstalled.addListener(async details => {
     switch (details.reason) {
         // Implicit defaults
-        case "install": await options.setAll(); break;
-        case "update":  await options.update(); break;
+        case "install": {
+            await options.setAll();
+
+            // Init after defaults set
+            init();
+            break;
+        }
+        case "update": {
+            await options.update();
+            break;
+        }
     }
-})
+});
 
 
 type CreateNotificationOptions =
@@ -318,14 +327,30 @@ messages.onConnect.addListener(port => {
 });
 
 
+let isInitialized = false;
+
 async function init () {
+    if (isInitialized) {
+        return;
+    }
+
+    // Options not set yet
+    const opts = await options.getAll();
+    if (!opts) {
+        return;
+    }
+
+    isInitialized = true;
+
+
     const { autoConnect
           , rememberConnectedServer } = await options.getAll();
 
     const browserType = await utils.getBrowserType();
     switch (browserType) {
         case utils.BrowserType.Chromium: {
-            disableProxy();
+            isChromium = true;
+            await disableProxy();
             break;
         }
 
@@ -346,7 +371,6 @@ async function init () {
             const { recentServers } = await localStorage.get("recentServers");
             if (recentServers?.length) {
                 const recentServer = recentServers[0];
-                console.log(recentServer);
                 await enableProxy(
                         mullvadApi.getFullSocksHost(recentServer.socks_name)
                       , connectionDetails);

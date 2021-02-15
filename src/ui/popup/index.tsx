@@ -15,6 +15,8 @@ import { TypedStorageArea } from "../../lib/TypedStorageArea";
 
 import { OptionsPanel } from "./OptionsPanel";
 
+import "../options/injectStyle";
+
 
 const _ = browser.i18n.getMessage;
 
