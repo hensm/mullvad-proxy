@@ -3,6 +3,8 @@
 import logger from "./lib/logger";
 import options from "./lib/options";
 
+import { TypedStorageArea } from "./lib/TypedStorageArea";
+
 import * as utils from "./lib/utils";
 import * as mullvadApi from "./lib/mullvadApi";
 
@@ -61,43 +63,39 @@ const notifConnectionDisconnected = (host = "host")
 });
 
 let lastNotificationId: string;
-async function showNotification (options: CreateNotificationOptions) {
+async function showNotification (createOptions: CreateNotificationOptions) {
+    const { enableNotifications
+          , enableNotificationsOnlyErrors } = await options.getAll();
+
+    if (!enableNotifications) {
+        return;
+    }
+
+    // Limit to error notifications if opt enabled
+    if (enableNotificationsOnlyErrors &&
+            createOptions.title !== _("notificationConnectionFailedTitle")) {
+        return;
+    }
+
     if (lastNotificationId) {
         browser.notifications.clear(lastNotificationId);
     }
 
-    lastNotificationId = await browser.notifications.create(options);
+    lastNotificationId = await browser.notifications.create(createOptions);
     return lastNotificationId;
 }
+
+
+const localStorage = new TypedStorageArea<{
+    recentServers: mullvadApi.Server[]
+}>(browser.storage.local);
 
 
 let isChromium: boolean;
 const { chrome } = (window as any);
 
-utils.getBrowserType().then(type => {
-    isChromium = type === utils.BrowserType.Chromium;
-
-    switch (type) {
-        case utils.BrowserType.Chromium: {
-            disableProxy();
-            break;
-        }
-        case utils.BrowserType.Firefox: {
-            browser.browserAction.setBadgeBackgroundColor({
-                color: "#294d73"
-            });
-            break;
-        }
-
-        default: {
-            logger.error("Failed to detect browser type.");
-        }
-    }
-})
-
-
 // Current proxy details
-let proxy: browser.proxy.Proxy | null;
+let proxy: browser.proxy.ProxyType | null;
 let proxyConnecting = false;
 let proxyAbortController = new AbortController();
 
@@ -138,6 +136,7 @@ async function enableProxy (
         type: "socks"
       , host: host
       , port: mullvadApi.SOCKS_PORT
+      , proxyDNS: await options.get("proxyDns")
     }
 
     proxyConnecting = true;
@@ -255,8 +254,20 @@ async function disableProxy (notify = false) {
 }
 
 
+function updateBadgeText (countryCode: string) {
+    if (proxy && !proxyConnecting) {
+        browser.browserAction.setBadgeText({
+            text: countryCode.toUpperCase()
+        });
+    }
+}
+
 
 messages.onConnect.addListener(port => {
+    if (port.name !== "background") {
+        return;
+    }
+
     function sendPopupUpdate () {
         port.postMessage({
             subject: "popup:/update"
@@ -266,10 +277,6 @@ messages.onConnect.addListener(port => {
               , host: proxy?.host
             }
         });
-    }
-
-    if (port.name !== "background") {
-        return;
     }
 
     port.onMessage.addListener(async message => {
@@ -300,13 +307,8 @@ messages.onConnect.addListener(port => {
             }
 
             case "background:/updateConnectionDetails": {
-                if (proxy && !proxyConnecting) {
-                    browser.browserAction.setBadgeText({
-                        text: mullvadApi.COUNTRY_NAME_MAP[
-                                message.data.details.country].toUpperCase()
-                    });
-                }
-
+                updateBadgeText(mullvadApi.COUNTRY_NAME_MAP[
+                        message.data.details.country]);
                 break;
             }
         }
@@ -314,3 +316,55 @@ messages.onConnect.addListener(port => {
 
     sendPopupUpdate();
 });
+
+
+async function init () {
+    const { autoConnect
+          , rememberConnectedServer } = await options.getAll();
+
+    const browserType = await utils.getBrowserType();
+    switch (browserType) {
+        case utils.BrowserType.Chromium: {
+            disableProxy();
+            break;
+        }
+
+        case utils.BrowserType.Firefox: {
+            browser.browserAction.setBadgeBackgroundColor({
+                color: "#294d73"
+            });
+
+            break;
+        }
+    }
+
+
+    if (autoConnect) {
+        const connectionDetails = await mullvadApi.fetchConnectionDetails();
+
+        if (rememberConnectedServer) {
+            const { recentServers } = await localStorage.get("recentServers");
+            if (recentServers?.length) {
+                const recentServer = recentServers[0];
+                console.log(recentServer);
+                await enableProxy(
+                        mullvadApi.getFullSocksHost(recentServer.socks_name)
+                      , connectionDetails);
+                updateBadgeText(recentServer.country_code);
+            } else {
+                logger.error("Could not find last connected server.");
+            }
+        } else {
+            let currentRegionProxyHost = mullvadApi.SOCKS_ADDRESS;
+            if (connectionDetails.mullvad_server_type === "wireguard") {
+                currentRegionProxyHost = mullvadApi.SOCKS_ADDRESS_WG
+            }
+
+            await enableProxy(currentRegionProxyHost, connectionDetails);
+            updateBadgeText(mullvadApi.COUNTRY_NAME_MAP[
+                    connectionDetails.country]);
+        }
+    }
+}
+
+init();

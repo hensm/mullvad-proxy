@@ -12,8 +12,8 @@ function getInputValue (input: HTMLInputElement) {
     switch (input.type) {
         case "checkbox":
             return input.checked;
-        /*case "number":
-            return parseFloat(input.value);*/
+        case "number":
+            return parseFloat(input.value);
 
         default:
             return input.value;
@@ -67,20 +67,38 @@ export class OptionsView extends React.Component<
                         <div className="option__description">
                             { _("optionsAutoConnectDescription") }
                         </div>
+
+                        <label className="option option--inline">
+                            <div className="option__control">
+                                <input name="rememberConnectedServer"
+                                    type="checkbox"
+                                    checked={ this.state.options?.rememberConnectedServer }
+                                    onChange={ this.handleInputChange } />
+                            </div>
+                            <div className="option__label">
+                                { _("optionsRememberConnectedServerLabel") }
+                            </div>
+                            <div className="option__description">
+                                { _("optionsRememberConnectedServerDescription") }
+                            </div>
+                        </label>
+
                     </label>
 
-                    <label className="option">
-                        <div className="option__label">
-                            { _("optionsAutoConnectServerLabel") }
-                        </div>
+                    <hr/>
+
+                    <label className="option option--inline">
                         <div className="option__control">
-                            <input name="autoConnectServer"
-                                type="text"
-                                value={ this.state.options?.autoConnectServer }
+                            <input name="proxyDns"
+                                type="checkbox"
+                                checked={ this.state.options?.proxyDns }
                                 onChange={ this.handleInputChange } />
                         </div>
+                        <div className="option__label">
+                            { _("optionsProxyDnsLabel") }
+                        </div>
                         <div className="option__description">
-                            { _("optionsAutoConnectServerDescription") }
+                            { _("optionsProxyDnsDescription") }
                         </div>
                     </label>
 
@@ -88,33 +106,46 @@ export class OptionsView extends React.Component<
 
                     <label className="option option--inline">
                         <div className="option__control">
-                            <input name="persistConnectionState"
+                            <input name="enableNotifications"
                                 type="checkbox"
-                                checked={ this.state.options?.persistConnectionState }
+                                checked={ this.state.options?.enableNotifications }
                                 onChange={ this.handleInputChange } />
                         </div>
                         <div className="option__label">
-                            { _("optionsPersistConnectionStateLabel") }
+                            { _("optionsEnableNotificationsLabel") }
                         </div>
                         <div className="option__description">
-                            { _("optionsPersistConnectionStateDescription") }
+                            { _("optionsEnableNotificationsDescription") }
                         </div>
+
+                        <label className="option option--inline">
+                            <div className="option__control">
+                                <input name="enableNotificationsOnlyErrors"
+                                    type="checkbox"
+                                    checked={ this.state.options?.enableNotificationsOnlyErrors }
+                                    onChange={ this.handleInputChange } />
+                            </div>
+                            <div className="option__label">
+                                { _("optionsEnableNotificationsOnlyErrorsLabel") }
+                            </div>
+                        </label>
+
                     </label>
 
                     <hr/>
 
                     <label className="option option--inline">
                         <div className="option__control">
-                            <input name="showDebugInfo"
+                            <input name="enableDebugInfo"
                                 type="checkbox"
-                                checked={ this.state.options?.showDebugInfo }
+                                checked={ this.state.options?.enableDebugInfo }
                                 onChange={ this.handleInputChange } />
                         </div>
                         <div className="option__label">
-                            { _("optionsShowDebugInfoLabel") }
+                            { _("optionsEnableDebugInfoLabel") }
                         </div>
                         <div className="option__description">
-                            { _("optionsShowDebugInfoDescription") }
+                            { _("optionsEnableDebugInfoDescription") }
                         </div>
                     </label>
                 </>}
@@ -124,7 +155,9 @@ export class OptionsView extends React.Component<
     private handleInputChange (ev: React.ChangeEvent<HTMLInputElement>) {
         this.setState(currentState => {
             if (currentState.options) {
-                currentState.options[ev.target.name] = getInputValue(ev.target);
+                currentState.options[ev.target.name] =
+                        getInputValue(ev.target) as boolean;
+
                 this.saveOptions();
             }
 

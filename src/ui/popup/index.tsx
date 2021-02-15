@@ -44,7 +44,6 @@ const localStorage = new TypedStorageArea<{
 interface PopupAppState {
     isLoading: boolean;
     isUpdating: boolean;
-
     isOptionsPanelOpen: boolean;
 
     proxy?: {
@@ -280,6 +279,10 @@ class PopupApp extends React.Component<
 
         return <>
             <div className={ connectionClassName }>
+                <button className="options-button"
+                        onClick={ this.onOptionsPanelOpen }
+                        title={ _("optionsPanelOpen") }>
+                </button>
                 { this.state.isLoading
                     ? <div className="loader"
                            title={ _("popupLoading") } />
@@ -412,10 +415,6 @@ class PopupApp extends React.Component<
 
             <OptionsPanel open={ this.state.isOptionsPanelOpen }
                           onClose={ this.onOptionsPanelClose } />
-            <button className="options-button"
-                    onClick={ this.onOptionsPanelOpen }
-                    title={ _("optionsPanelOpen") }>
-            </button>
         </>;
     }
 
@@ -441,18 +440,27 @@ class PopupApp extends React.Component<
         }
 
         let matchingServer: mullvadApi.Server | undefined;
+        let matchingCountry: string | undefined;
         for (const [, countryServers ] of this.serverMap) {
             const match = countryServers.find(server =>
                     this.state.proxy?.host?.startsWith(server.socks_name));
 
             if (match) {
                 matchingServer = match;
+                matchingCountry = matchingServer.country_code;
                 break;
             }
         }
 
+        // Handle current region addresses
+        if (!matchingServer &&
+                this.state.proxy?.host === mullvadApi.SOCKS_ADDRESS
+             || this.state.proxy?.host === mullvadApi.SOCKS_ADDRESS_WG) {
+            matchingCountry = mullvadApi.COUNTRY_NAME_MAP[details.country];
+        }
+
         this.setState({
-            selectedCountry: matchingServer?.country_code
+            selectedCountry: matchingCountry
           , selectedServer: matchingServer?.socks_name
           , connectionDetails: details
           , isUpdating: false

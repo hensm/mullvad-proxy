@@ -28,6 +28,12 @@
     flex-direction: row;
 }
 
+.option > .option {
+    flex-basis: 100%;
+    margin-left: 15px;
+    margin-top: 15px;
+}
+
 .option__control,
 .option__label {
     pointer-events: initial;

@@ -1,6 +1,6 @@
 // Add accessible proxy types
 declare namespace browser.proxy {
-    interface Proxy {
+    interface ProxyType {
         type: string;
         host: string;
         port: string;
