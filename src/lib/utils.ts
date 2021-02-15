@@ -12,7 +12,7 @@ export async function getBrowserType () {
     type GetBrowserInfo = () => Promise<browser.runtime.BrowserInfo>;
     const getBrowserInfo: (GetBrowserInfo | undefined) =
             (browser.runtime.getBrowserInfo as any);
-    
+
     if (getBrowserInfo) {
         const browserInfo = await getBrowserInfo();
 

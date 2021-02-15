@@ -3,6 +3,7 @@
 import React from "react";
 
 import options, { Options } from "../../lib/options";
+import * as utils from "../../lib/utils";
 
 
 const _ = browser.i18n.getMessage;
@@ -87,7 +88,7 @@ export class OptionsView extends React.Component<
 
                     <hr/>
 
-                    <label className="option option--inline">
+                    <label className="option option--inline proxy-dns-option">
                         <div className="option__control">
                             <input name="proxyDns"
                                 type="checkbox"
