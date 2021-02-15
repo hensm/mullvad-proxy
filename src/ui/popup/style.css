@@ -1,6 +1,6 @@
 body {
     height: 350px;
-    min-width: 300px;
+    width: 300px;
 }
 
 .svg-wrapper {
@@ -14,20 +14,6 @@ body {
     visibility: hidden;
     width: 100%;
     z-index: -1;
-}
-
-.options-button {
-    background: initial;
-    background-image: url("assets/icons8-settings.svg");
-    background-position: center;
-    background-repeat: no-repeat;
-    background-size: 20px;
-    border: initial;
-    height: 30px;
-    position: absolute;
-    right: 15px;
-    top: 15px;
-    width: 30px;
 }
 
 .loader {
@@ -55,12 +41,27 @@ body {
     flex-direction: column;
     flex: 1;
     gap: 5px;
+    position: relative;
     user-select: none;
 }
 
 .connection--loading {
     align-items: center;
     justify-content: center;
+}
+
+.options-button {
+    background: initial;
+    background-image: url("assets/icons8-settings.svg");
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: 20px;
+    border: initial;
+    height: 30px;
+    position: absolute;
+    right: 0px;
+    top: 0px;
+    width: 30px;
 }
 
 .connection__status {
@@ -174,8 +175,9 @@ html, body {
     position: absolute;
     transform: translateY(100%);
     transition: 200ms ease;
-    transition-property: transform, opacity;
+    transition-property: transform, opacity, visibility;
     user-select: none;
+    visibility: hidden;
     width: 100%;
     z-index: 9999;
 }
@@ -183,6 +185,7 @@ html, body {
 .panel.panel--visible {
     transform: translateY(0);
     opacity: 1;
+    visibility: visible;
 }
 
 @media (prefers-reduced-motion: reduced) {

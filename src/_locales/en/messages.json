@@ -145,34 +145,47 @@
       , "description": "Auto-connect option label."
     }
   , "optionsAutoConnectDescription": {
-        "message": "When not manually connected to a proxy, connect automatically to either the current region's proxy or a user-specified server."
+        "message": "When not manually connected to a proxy, connect automatically to either the current region's proxy or the last remembered connected server (if enabled)."
       , "description": "Auto-connect option description."
     }
 
-  , "optionsAutoConnectServerLabel": {
-        "message": "Auto-connect custom server:"
-      , "description": "Auto-connect server option label."
+  , "optionsRememberConnectedServerLabel": {
+        "message": "Remember connected server"
+      , "description": "Remember connected server option label."
     }
-  , "optionsAutoConnectServerDescription": {
-        "message": "Leave blank to disable."
-      , "description": "Auto-connect server option description."
-    }
-
-  , "optionsPersistConnectionStateLabel": {
-        "message": "Persist connection state"
-      , "description": "Persist connection state option label."
-    }
-  , "optionsPersistConnectionStateDescription": {
-        "message": "Persist proxy settings between browser/extension restarts."
-      , "description": "Persist connection state option description."
+  , "optionsRememberConnectedServerDescription": {
+        "message": "Restore proxy settings after browser/extension restarts."
+      , "description": "Remember connected server option description."
     }
 
-  , "optionsShowDebugInfoLabel": {
-        "message": "Show debug info"
-      , "description": "Show debug info option label."
+  , "optionsProxyDnsLabel": {
+        "message": "Proxy DNS"
+      , "description": "Proxy DNS option label."
     }
-  , "optionsShowDebugInfoDescription": {
+  , "optionsProxyDnsDescription": {
+        "message": "Hide system DNS servers by resolving DNS queries on the proxy server."
+      , "description": "Proxy DNS option description."
+    }
+
+  , "optionsEnableNotificationsLabel": {
+        "message": "Enable notifications"
+      , "description": "Enable notifications option label."
+    }
+  , "optionsEnableNotificationsDescription": {
+        "message": "Show notifications when the connection state changes or if a connection error occurs."
+      , "description": "Enable notifications option description."
+    }
+  , "optionsEnableNotificationsOnlyErrorsLabel": {
+        "message": "Only show for errors"
+      , "description": "Enable only error notifications option label."
+    }
+
+  , "optionsEnableDebugInfoLabel": {
+        "message": "Enable debug info"
+      , "description": "Enable debug info option label."
+    }
+  , "optionsEnableDebugInfoDescription": {
         "message": "Show additional connection info and output more detailed logs."
-      , "description": "Show debug info option description."
+      , "description": "Enable debug info option description."
     }
 }

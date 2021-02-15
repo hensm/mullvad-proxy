@@ -14,9 +14,11 @@ const storageArea = new TypedStorageArea<{
 
 export interface Options {
     autoConnect: boolean;
-    autoConnectServer: string;
-    persistConnectionState: boolean;
-    showDebugInfo: boolean;
+    rememberConnectedServer: boolean;
+    proxyDns: boolean;
+    enableNotifications: boolean;
+    enableNotificationsOnlyErrors: boolean;
+    enableDebugInfo: boolean;
 
     [key: string]: Options[keyof Options];
 }
