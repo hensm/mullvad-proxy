@@ -1,7 +1,7 @@
 "use strict";
 
 const path = require("path");
-const CopyWebpackPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require("copy-webpack-plugin");
 
 
 const INCLUDE_PATH = path.resolve(__dirname, "src");
@@ -31,16 +31,20 @@ module.exports = {
     }
   , plugins: [
         // Copy static assets
-        new CopyWebpackPlugin([
-            {
-                from: INCLUDE_PATH
-              , to: OUTPUT_PATH
-              , ignore: [ "*.ts", "*.tsx" ]
-            }
-          , {
-                from: "./node_modules/webextension-polyfill/dist/browser-polyfill.min.js"
-            }
-        ])
+        new CopyPlugin({
+            patterns: [
+                {
+                    from: INCLUDE_PATH
+                  , to: OUTPUT_PATH
+                  , globOptions: {
+                        ignore: [ "**.ts", "**.tsx" ]   
+                    }
+                }
+              , {
+                    from: "./node_modules/webextension-polyfill/dist/browser-polyfill.min.js"
+                }
+            ]
+        })
     ]
   , resolve: {
         alias: {
