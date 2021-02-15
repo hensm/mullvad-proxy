@@ -145,7 +145,7 @@
       , "description": "Auto-connect option label."
     }
   , "optionsAutoConnectDescription": {
-        "message": "When not manually connected to a proxy, connect automatically to either the current region's proxy or the last remembered connected server (if enabled)."
+        "message": "When the extension is first loaded, connect automatically to either the current region's proxy or the last remembered connected server (if enabled)."
       , "description": "Auto-connect option description."
     }
 
