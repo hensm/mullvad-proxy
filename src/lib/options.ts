@@ -137,6 +137,11 @@ export default new class extends TypedEventTarget<EventMap> {
     public async update (defaults = defaultOptions): Promise<void> {
         const newOpts = await this.getAll();
 
+        // If options not found on update, set defaults
+        if (!newOpts) {
+            this.setAll();
+        }
+
         // Find options not already in storage
         for (const [optName, optVal] of Object.entries(defaults)) {
             if (!newOpts.hasOwnProperty(optName)) {
