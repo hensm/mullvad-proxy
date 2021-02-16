@@ -119,6 +119,11 @@ body {
     user-select: text;
 }
 
+.connection__ip--v6 {
+    margin-top: -5px;
+    font-size: 0.85em;
+}
+
 
 .selection,
 .control {

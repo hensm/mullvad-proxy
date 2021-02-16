@@ -137,6 +137,23 @@ export class OptionsView extends React.Component<
 
                     <label className="option option--inline">
                         <div className="option__control">
+                            <input name="enableIpv6Lookups"
+                                type="checkbox"
+                                checked={ this.state.options?.enableIpv6Lookups }
+                                onChange={ this.handleInputChange } />
+                        </div>
+                        <div className="option__label">
+                            { _("optionsEnableIpv6LookupsLabel") }
+                        </div>
+                        <div className="option__description">
+                            { _("optionsEnableIpv6LookupsDescription") }
+                        </div>
+                    </label>
+
+                    <hr/>
+
+                    <label className="option option--inline">
+                        <div className="option__control">
                             <input name="enableDebugInfo"
                                 type="checkbox"
                                 checked={ this.state.options?.enableDebugInfo }

@@ -8,6 +8,7 @@ export default {
   , rememberConnectedServer: false
   , proxyDns: true
   , enableNotifications: true
+  , enableIpv6Lookups: false
   , enableNotificationsOnlyErrors: false
   , enableDebugInfo: false
 } as Options;

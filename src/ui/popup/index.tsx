@@ -55,6 +55,7 @@ interface PopupAppState {
     };
 
     connectionDetails?: mullvadApi.ConnectionDetails;
+    address6?: string;
 
     selectedCountry?: string;
     selectedServer?: string;
@@ -321,9 +322,15 @@ class PopupApp extends React.Component<
                                     { this.state.connectionDetails?.country }
                                 </div>
 
-                                <div className="connection__ip" title="IP address">
+                                <div className="connection__ip connection__ip--v4"
+                                     title={ _("popupConnectionIpv4Title") }>
                                     { this.state.connectionDetails?.ip }
                                 </div>
+                                { this.state.address6 &&
+                                    <div className="connection__ip connection__ip--v6"
+                                        title={ _("popupConnectionIpv6Title") }>
+                                        { this.state.address6 }
+                                    </div> }
                             </> }
                     </> }
             </div>
@@ -434,7 +441,25 @@ class PopupApp extends React.Component<
 
         let details: mullvadApi.ConnectionDetails;
         try {
-            details = await mullvadApi.fetchConnectionDetails();
+            // Fetch connection details
+            const detailsPromise = mullvadApi.fetchConnectionDetails();
+
+            if (await options.get("enableIpv6Lookups")) {
+                // Fetch IPv6 address if available
+                mullvadApi.fetchIpAddress(mullvadApi.EndpointVariant.IPv6)
+                    .then(address6 => this.setState({ address6 }))
+                    .catch(() => {
+                        this.setState({
+                            address6: undefined
+                        });
+                    });
+            } else {
+                this.setState({
+                    address6: undefined
+                });
+            }
+
+            details = await detailsPromise;
         } catch (err) {
             logger.error("Failed to fetch connection details!");
             this.setState({ isUpdating: false });

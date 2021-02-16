@@ -194,9 +194,11 @@ async function enableProxy (
 
    try {
         // Request to trigger proxy
-        const address = await mullvadApi.fetchIpAddress({
-            signal: proxyAbortController.signal
-        });
+        const address = await mullvadApi.fetchIpAddress(
+            mullvadApi.EndpointVariant.IPv4
+          , {
+                signal: proxyAbortController.signal
+            });
 
         logger.info(`IP address: ${address}`);
 

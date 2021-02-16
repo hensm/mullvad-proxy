@@ -18,6 +18,7 @@ export interface Options {
     proxyDns: boolean;
     enableNotifications: boolean;
     enableNotificationsOnlyErrors: boolean;
+    enableIpv6Lookups: boolean;
     enableDebugInfo: boolean;
 
     [key: string]: Options[keyof Options];

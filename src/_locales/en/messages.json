@@ -87,9 +87,13 @@
       , "description": "Title text for connection info item."
     }
 
-  , "popupConnectionCityPlaceholder": {
-        "message": "Somewhere"
-      , "description": "If the Mullvad API returns null for the city field."
+  , "popupConnectionIpv4Title": {
+        "message": "IPv4 address"
+      , "description": "Title popup on IPv4 address"
+    }
+  , "popupConnectionIpv6Title": {
+        "message": "IPv6 address"
+      , "description": "Title popup on IPv6 address"
     }
 
   , "popupSelectionCountryPlaceholder": {
@@ -178,6 +182,15 @@
   , "optionsEnableNotificationsOnlyErrorsLabel": {
         "message": "Only show for errors"
       , "description": "Enable only error notifications option label."
+    }
+
+  , "optionsEnableIpv6LookupsLabel": {
+        "message": "Enable IPv6 lookups"
+      , "description": "Enable debug info option label."
+    }
+  , "optionsEnableIpv6LookupsDescription": {
+        "message": "Make additional API request to display public IPv6 address."
+      , "description": "Enable debug info option description."
     }
 
   , "optionsEnableDebugInfoLabel": {

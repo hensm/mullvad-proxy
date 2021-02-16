@@ -4,11 +4,33 @@ import { Logger } from "./logger";
 const logger = new Logger("mullvadApi");
 
 
-const ENDPOINT_AIM = "https://am.i.mullvad.net";
-const ENDPOINT_AIM_IP = `${ENDPOINT_AIM}/ip`;
-const ENDPOINT_AIM_DETAILS = `${ENDPOINT_AIM}/json`;
-const ENDPOINT_AIM_PORT = `${ENDPOINT_AIM}/port`;
+const AIM_HOST = "am.i.mullvad.net";
+const ENDPOINT_AIM = `https://${AIM_HOST}`;
+const IPV4_ENDPOINT_AIM = `https://ipv4.${AIM_HOST}`;
+const IPV6_ENDPOINT_AIM = `https://ipv6.${AIM_HOST}`;
 
+export enum EndpointVariant { IPv4, IPv6 }
+
+/**
+ * Get /ip and /json endpoints for IPv4/IPv6.
+ */
+function getVariantEndpoints (variant: EndpointVariant) {
+    let endpoint;
+    switch (variant) {
+        case EndpointVariant.IPv4:  endpoint = IPV4_ENDPOINT_AIM; break;
+        case EndpointVariant.IPv6:  endpoint = IPV6_ENDPOINT_AIM; break;
+        
+        default:
+            throw new Error("Invalid endpoint variant");
+    }
+
+    return {
+        endpointAimIp: `${endpoint}/ip`
+      , endpointAimDetails: `${endpoint}/json`
+    };
+}
+
+const ENDPOINT_AIM_PORT = `${ENDPOINT_AIM}/port`;
 const ENDPOINT_RELAYS = "https://api.mullvad.net/www/relays/wireguard/";
 
 
@@ -70,20 +92,28 @@ export interface PortDetails {
 /**
  * Gets public IP address as string.
  */
-export async function fetchIpAddress (init?: RequestInit) {
+export async function fetchIpAddress (
+        variant = EndpointVariant.IPv4
+      , init?: RequestInit) {
+
     logger.info("Fetching IP address...");
 
-    const res = await fetch(ENDPOINT_AIM_IP, init);
+    const { endpointAimIp } = getVariantEndpoints(variant);
+    const res = await fetch(endpointAimIp, init);
     return (await res.text()).trim();
 }
 
 /**
  * Gets connection details JSON.
  */
-export async function fetchConnectionDetails (init?: RequestInit) {
+export async function fetchConnectionDetails (
+        variant = EndpointVariant.IPv4
+      , init?: RequestInit) {
+
     logger.info("Fetching connection details...");
 
-    const res = await fetch(ENDPOINT_AIM_DETAILS, init);
+    const { endpointAimDetails } = getVariantEndpoints(variant);
+    const res = await fetch(endpointAimDetails, init);
     const json: ConnectionDetails = await res.json();
 
     // Normalize
