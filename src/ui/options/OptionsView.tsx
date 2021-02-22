@@ -5,6 +5,8 @@ import React from "react";
 import options, { Options } from "../../lib/options";
 import * as utils from "../../lib/utils";
 
+import localStorage from "../../localStorage";
+
 
 const _ = browser.i18n.getMessage;
 
@@ -36,6 +38,8 @@ export class OptionsView extends React.Component<
         super(props);
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleClearCache = this.handleClearCache.bind(this);
+        this.handleClearRecentServers = this.handleClearRecentServers.bind(this);
     }
 
     async componentDidMount () {
@@ -167,7 +171,26 @@ export class OptionsView extends React.Component<
                         </div>
                     </label>
                 </>}
+
+            <hr/>
+            
+            <div className="buttons">
+                <button onClick={ this.handleClearCache }>
+                    { _("optionsClearCacheLabel") }
+                </button>
+                <button onClick={ this.handleClearRecentServers }>
+                    { _("optionsClearRecentServersLabel") }
+                </button>
+            </div>
         </div>
+    }
+
+    private handleClearCache () {
+        localStorage.remove([ "serverList", "serverListFrom" ]);
+    }
+
+    private handleClearRecentServers () {
+        localStorage.remove([ "recentServers" ]);
     }
 
     private handleInputChange (ev: React.ChangeEvent<HTMLInputElement>) {

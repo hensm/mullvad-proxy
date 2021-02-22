@@ -53,3 +53,9 @@
     opacity: 0.75;
 }
 
+
+.buttons {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+}

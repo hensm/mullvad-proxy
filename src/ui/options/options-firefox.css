@@ -2,6 +2,13 @@
     background-color: white;
 }
 
+.options-page button,
+.options-page select {
+    --background-normal: rgb(40, 40, 40);
+    --background-hover: rgb(60, 60, 60);
+    --background-active: rgb(70, 70, 70);
+}
+
 @media (prefers-color-scheme: dark) {
     .options-page body {
         background-color: #202023;
@@ -25,5 +32,14 @@
 
     .options-page input[type="checkbox"]:checked::before {
         filter: invert(1);
+    }
+
+    .options-page button,
+    .options-page select {
+        --background-active: rgba(0, 0, 0, 0.35);
+        --background-hover: rgba(0, 0, 0, 0.25);
+        --background-normal: rgba(0, 0, 0, 0.15);
+
+        color: black;
     }
 }

@@ -201,4 +201,13 @@
         "message": "Show additional connection info and output more detailed logs."
       , "description": "Enable debug info option description."
     }
+
+  , "optionsClearCacheLabel": {
+        "message": "Clear cache"
+      , "description": "Label for button that clears API cache"
+    }
+  , "optionsClearRecentServersLabel": {
+        "message": "Clear recent servers"
+      , "description": "Label for button that clears API cache"
+    }
 }

@@ -4,6 +4,7 @@ import React from "react";
 import ReactDOM from "react-dom";
 import afterFrame from "afterframe";
 
+import localStorage from "../../localStorage";
 import messages from "../../messages";
 
 import logger from "../../lib/logger";
@@ -11,7 +12,6 @@ import options from "../../lib/options";
 
 import { getMinutesInMs } from "../../lib/utils";
 import * as mullvadApi from "../../lib/mullvadApi";
-import { TypedStorageArea } from "../../lib/TypedStorageArea";
 
 import { OptionsPanel } from "./OptionsPanel";
 
@@ -35,13 +35,6 @@ browser.runtime.getPlatformInfo()
 
 // Background script messaging
 let port: ReturnType<typeof messages.connect>;
-
-const localStorage = new TypedStorageArea<{
-    serverList: mullvadApi.Server[];
-    serverListFrom: number;
-    recentServers: mullvadApi.Server[];
-}>(browser.storage.local);
-
 
 interface PopupAppState {
     isLoading: boolean;

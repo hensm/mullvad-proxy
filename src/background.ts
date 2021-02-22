@@ -3,11 +3,10 @@
 import logger from "./lib/logger";
 import options from "./lib/options";
 
-import { TypedStorageArea } from "./lib/TypedStorageArea";
-
 import * as utils from "./lib/utils";
 import * as mullvadApi from "./lib/mullvadApi";
 
+import localStorage from "./localStorage";
 import messages from "./messages";
 
 
@@ -93,11 +92,6 @@ async function showNotification (createOptions: CreateNotificationOptions) {
     lastNotificationId = await browser.notifications.create(createOptions);
     return lastNotificationId;
 }
-
-
-const localStorage = new TypedStorageArea<{
-    recentServers: mullvadApi.Server[]
-}>(browser.storage.local);
 
 
 let isChromium: boolean;
