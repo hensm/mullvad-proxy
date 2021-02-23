@@ -273,7 +273,16 @@ messages.onConnect.addListener(port => {
         return;
     }
 
+    let isPortConnected = true;
+    port.onDisconnect.addListener(() => {
+        isPortConnected = false;
+    });
+
     function sendPopupUpdate () {
+        if (!isPortConnected) {
+            return;
+        }
+
         port.postMessage({
             subject: "popup:/update"
           , data: {
@@ -292,13 +301,15 @@ messages.onConnect.addListener(port => {
                     ? message.data.proxyHost
                     : mullvadApi.getFullSocksHost(message.data.proxyHost);
 
-                port.postMessage({
-                    subject: "popup:/update"
-                  , data: {
-                        isConnected: false
-                      , isConnecting: true
-                    }
-                });
+                if (isPortConnected) {
+                    port.postMessage({
+                        subject: "popup:/update"
+                      , data: {
+                            isConnected: false
+                          , isConnecting: true
+                        }
+                    });
+                }
 
                 await enableProxy(host, message.data.details);
                 sendPopupUpdate();
