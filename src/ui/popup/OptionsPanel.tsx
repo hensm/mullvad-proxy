@@ -1,25 +1,13 @@
 "use strict";
 
 import React from "react";
+import * as focusTrap from "focus-trap";
 
-import options, { Options } from "../../lib/options";
+import { Options } from "../../lib/options";
 import { OptionsView } from "../options/OptionsView"
 
 
 const _ = browser.i18n.getMessage;
-
-
-function getInputValue (input: HTMLInputElement) {
-    switch (input.type) {
-        case "checkbox":
-            return input.checked;
-        /*case "number":
-            return parseFloat(input.value);*/
-
-        default:
-            return input.value;
-    }
-}
 
 
 interface OptionsPanelProps {
@@ -30,17 +18,42 @@ interface OptionsPanelState {
     options?: Options;
 }
 
+const optionsPanelClass = "panel";
+
 export class OptionsPanel extends React.Component<
         OptionsPanelProps, OptionsPanelState> {
 
+    private panelRef = React.createRef<HTMLDivElement>();
+    private trap?: focusTrap.FocusTrap;
+
+    componentDidMount () {
+        const panelElement = this.panelRef.current;
+        if (!panelElement) {
+            return;
+        }
+
+        this.trap = focusTrap.createFocusTrap(panelElement, {
+            escapeDeactivates: false
+          , fallbackFocus: `.${optionsPanelClass}`
+        });
+    }
+
     render () {
-        let panelClassName = "panel";
+        let panelClass = optionsPanelClass;
         if (this.props.open) {
-            panelClassName += " panel--visible";
+            panelClass += ` ${panelClass}--visible`;
+        }
+
+        if (this.props.open) {
+            this.trap?.activate();
+        } else {
+            this.trap?.deactivate();
         }
 
         return (
-            <div className={ panelClassName }>
+            <div className={ panelClass }
+                ref={ this.panelRef }
+                tabIndex={ -1 }>
                 <div className="panel__header">
                     <h2 className="panel__title">
                         { _("optionsPanelTitle") }
