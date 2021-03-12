@@ -35,8 +35,8 @@
     }
 
   , "icons": {
-        "48": "icons/locked.svg"
-      , "96": "icons/locked.svg"
+        "48": "icons/locked-48.png"
+      , "96": "icons/locked-96.png"
     }
 
   , "options_ui": {
