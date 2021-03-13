@@ -52,6 +52,18 @@ module.exports = {
           , "react-dom": "preact/compat"
         }
     }
+  , optimization: {
+        splitChunks: {
+            cacheGroups: {
+                react: {
+                    test: /[\\/]node_modules[\\/](preact|preact-compat)[\\/]/
+                  , name: "react"
+                  , chunks: "all"
+                  , enforce: true
+                }
+            }
+        }
+    }
   , mode: "development"
   , devtool: "source-map"
 };
