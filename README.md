@@ -1,10 +1,10 @@
-<img src="preview.png" align="right" width="352" height="411">
+<img src="branding/preview.png" align="right" width="352" height="411">
 
 # Mullvad Proxy
 
-Rough prototype for a Mullvad proxy browser extension. Currently supports Firefox and Chromium-based browsers. 
+Connect to a range of Mullvad proxies without manual configuration. Currently supports Firefox and Chromium-based browsers:
 
-
+<a href="https://addons.mozilla.org/en-GB/firefox/addon/mullvad-proxy/" title="Get Firefox Extension"><img src="branding/firefox.svg" width="48"></a><a href="https://microsoftedge.microsoft.com/addons/detail/mullvad-proxy-unofficial/paapijocjajiidlalgekaomeaganninh" title="Get Edge Extension"><img src="branding/edge.svg" width="48"></a>
 
 ## Usage
 
