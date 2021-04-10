@@ -48,3 +48,5 @@ Icons by [icons8](https://icons8.com):
 * `src/icons/icons8-cancel-120.png`
 * `src/icons/icons8-ok-120.png`
 * `src/icons/icons8-warn-120.png`
+* `src/ui/popup/assets/icons8-info.svg`
+* `src/ui/popup/assets/icons8-settings.svg`
