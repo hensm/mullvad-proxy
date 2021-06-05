@@ -4,14 +4,14 @@
 
 .options-page button,
 .options-page select {
-    --background-normal: rgb(40, 40, 40);
-    --background-hover: rgb(60, 60, 60);
-    --background-active: rgb(70, 70, 70);
+    --background-normal: #2b2a33;
+    --background-hover: #52525e;
+    --background-active: #5a5a65;
 }
 
 @media (prefers-color-scheme: dark) {
     .options-page body {
-        background-color: #202023;
+        background-color: #23222b;
     }
 }
 
