@@ -78,12 +78,12 @@
       , "description": "Connection status displayed whilst not connected to a proxy server."
     }
   
-    , "popupConnectionTypeWireGuard": {
-          "message": "via WireGuard"
+  , "popupConnectionTypeWireGuard": {
+          "message": "SOCKS5 via WireGuard"
         , "description": "Title text for connection info item."
       }
   , "popupConnectionTypeOpenVPN": {
-        "message": "via OpenVPN"
+        "message": "SOCKS5 via OpenVPN"
       , "description": "Title text for connection info item."
     }
 
