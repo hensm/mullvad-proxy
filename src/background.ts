@@ -102,7 +102,35 @@ let proxy: browser.proxy.ProxyType | null;
 let proxyConnecting = false;
 let proxyAbortController = new AbortController();
 
-function onProxyRequest (_details: browser.proxy._OnRequestDetails) {
+
+let excludeList: string[] = [];
+
+options.addEventListener("changed", async ev => {
+    if (ev.detail.includes("enableExcludeList")
+     || ev.detail.includes("excludeList")) {
+        const opts = await options.getAll();
+        
+        if (opts.enableExcludeList) {
+            excludeList = opts.excludeList;
+            return;
+        }
+
+        excludeList = [];
+    }
+});
+
+function onProxyRequest (details: browser.proxy._OnRequestDetails) {
+    // Check patterns against request URLs
+    for (const host of excludeList) {
+        if ((new URL(details.url)).host === host) {
+            return;
+        // Also ignore requests to be loaded into an excluded host
+        } else if (details.documentUrl
+                && (new URL(details.documentUrl)).host === host) {
+            return;
+        }
+    }
+
     return proxy;
 }
 
@@ -349,9 +377,9 @@ async function init () {
 
     isInitialized = true;
 
-
-    const { autoConnect
-          , rememberConnectedServer } = await options.getAll();
+    if (opts.enableExcludeList) {
+        excludeList = opts.excludeList;
+    }
 
     const browserType = await utils.getBrowserType();
     switch (browserType) {
@@ -371,10 +399,10 @@ async function init () {
     }
 
 
-    if (autoConnect) {
+    if (opts.autoConnect) {
         const connectionDetails = await mullvadApi.fetchConnectionDetails();
 
-        if (rememberConnectedServer) {
+        if (opts.rememberConnectedServer) {
             const { recentServers } = await localStorage.get("recentServers");
             if (recentServers?.length) {
                 const recentServer = recentServers[0];

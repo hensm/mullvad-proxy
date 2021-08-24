@@ -34,15 +34,16 @@ export class OptionsView extends React.Component<
 
     state: OptionsViewState = {};
 
-    constructor (props: OptionsViewProps) {
+    constructor(props: OptionsViewProps) {
         super(props);
 
         this.handleInputChange = this.handleInputChange.bind(this);
+        this.handleExcludeListChange = this.handleExcludeListChange.bind(this);
         this.handleClearCache = this.handleClearCache.bind(this);
         this.handleClearRecentServers = this.handleClearRecentServers.bind(this);
     }
 
-    async componentDidMount () {
+    async componentDidMount() {
         this.setState({
             options: await options.getAll()
         });
@@ -55,8 +56,8 @@ export class OptionsView extends React.Component<
         })
     }
 
-    render () {
-        return <div className="options">
+    render() {
+        return <form className="options">
             { this.state.options &&
                 <>
                     <label className="option option--inline">
@@ -170,7 +171,38 @@ export class OptionsView extends React.Component<
                             { _("optionsEnableDebugInfoDescription") }
                         </div>
                     </label>
-                </>}
+
+                    <hr/>
+
+                    <label className="option option--inline">
+                        <div className="option__control">
+                            <input name="enableExcludeList"
+                                type="checkbox"
+                                checked={ this.state.options?.enableExcludeList }
+                                onChange={ this.handleInputChange } />
+                        </div>
+                        <div className="option__label">
+                            { _("optionsEnableExcludeListLabel") }
+                        </div>
+
+                        <label className="option">
+                            <div className="option__label">
+                                { _("optionsExcludeListLabel") }
+                            </div>
+                            <div className="option__description">
+                                { _("optionsExcludeListDescription") }
+                            </div>
+                            <div className="option__control">
+                                <textarea name="excludeList"
+                                        onChange={ this.handleExcludeListChange }
+                                        value={ this.state.options.excludeList.join("\n") }
+                                        rows={8}>
+                                </textarea>
+                            </div>
+                        </label>
+                    </label>
+
+                </> }
 
             <hr/>
             
@@ -182,21 +214,21 @@ export class OptionsView extends React.Component<
                     { _("optionsClearRecentServersLabel") }
                 </button>
             </div>
-        </div>
+        </form>
     }
 
-    private handleClearCache () {
+    private handleClearCache() {
         localStorage.remove([ "serverList", "serverListFrom" ]);
     }
 
-    private handleClearRecentServers () {
+    private handleClearRecentServers() {
         localStorage.remove([ "recentServers" ]);
     }
 
-    private handleInputChange (ev: React.ChangeEvent<HTMLInputElement>) {
+    private handleInputChange(ev: React.ChangeEvent<HTMLInputElement>) {
         this.setState(currentState => {
             if (currentState.options) {
-                currentState.options[ev.target.name] =
+                (currentState.options as any)[ev.target.name] =
                         getInputValue(ev.target) as boolean;
 
                 this.saveOptions();
@@ -206,7 +238,22 @@ export class OptionsView extends React.Component<
         });
     }
 
-    private async saveOptions () {
+    private handleExcludeListChange(ev: React.ChangeEvent<HTMLTextAreaElement>) {
+        this.setState(currentState => {
+            if (currentState.options) {
+                if (ev.target.value === "") {
+                    currentState.options.excludeList = [];
+                }
+
+                currentState.options.excludeList = ev.target.value.split("\n");
+                this.saveOptions();
+            }
+            
+            return currentState;
+        });
+    }
+
+    private async saveOptions() {
         await options.setAll(this.state.options);
     }
 }

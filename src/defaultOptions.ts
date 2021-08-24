@@ -11,4 +11,6 @@ export default {
   , enableIpv6Lookups: false
   , enableNotificationsOnlyErrors: false
   , enableDebugInfo: false
+  , enableExcludeList: false
+  , excludeList: []
 } as Options;

@@ -20,8 +20,8 @@ export interface Options {
     enableNotificationsOnlyErrors: boolean;
     enableIpv6Lookups: boolean;
     enableDebugInfo: boolean;
-
-    [key: string]: Options[keyof Options];
+    enableExcludeList: boolean;
+    excludeList: string[];
 }
 
 
@@ -151,7 +151,7 @@ export default new class extends TypedEventTarget<EventMap> {
         // Find options not already in storage
         for (const [optName, optVal] of Object.entries(defaults)) {
             if (!newOpts.hasOwnProperty(optName)) {
-                newOpts[optName] = optVal;
+                (newOpts as any)[optName] = optVal;
             }
         }
 

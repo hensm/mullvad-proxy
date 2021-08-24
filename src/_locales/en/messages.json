@@ -202,6 +202,19 @@
       , "description": "Enable debug info option description."
     }
 
+  , "optionsEnableExcludeListLabel": {
+        "message": "Enable exclude list"
+      , "description": "Enable exclude list option label."
+    }
+  , "optionsExcludeListLabel": {
+        "message": "Exclude list"
+      , "description": "Exclude list option label."
+    }
+  , "optionsExcludeListDescription": {
+        "message": "List of newline-delimited hosts for URLs to exclude from proxied requests."
+      , "description": "Exclude list option label."
+    }
+
   , "optionsClearCacheLabel": {
         "message": "Clear cache"
       , "description": "Label for button that clears API cache"

@@ -42,6 +42,9 @@
 .option__control {
     display: flex;
 }
+.option:not(.option--inline) > .option__control {
+    margin-top: 10px;
+}
 .option__control > input[type="text"] {
     width: 100%;
 }
@@ -58,4 +61,8 @@
     display: flex;
     flex-wrap: wrap;
     gap: 10px;
+}
+
+textarea[name="excludeList"] {
+    width: 100%;
 }
