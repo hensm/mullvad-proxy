@@ -27,12 +27,15 @@ function getInputValue (input: HTMLInputElement) {
 interface OptionsViewProps {}
 interface OptionsViewState {
     options?: Options;
+    browserType: utils.BrowserType;
 }
 
 export class OptionsView extends React.Component<
         OptionsViewProps, OptionsViewState> {
 
-    state: OptionsViewState = {};
+    state: OptionsViewState = {
+        browserType: utils.BrowserType.Unknown
+    };
 
     constructor(props: OptionsViewProps) {
         super(props);
@@ -46,6 +49,7 @@ export class OptionsView extends React.Component<
     async componentDidMount() {
         this.setState({
             options: await options.getAll()
+          , browserType: await utils.getBrowserType()
         });
 
         // Update options data if changed whilst page is open
@@ -53,7 +57,7 @@ export class OptionsView extends React.Component<
             this.setState({
                 options: await options.getAll()
             })
-        })
+        });
     }
 
     render() {
@@ -172,35 +176,38 @@ export class OptionsView extends React.Component<
                         </div>
                     </label>
 
-                    <hr/>
+                    { this.state.browserType === utils.BrowserType.Firefox &&
+                        <>
+                            <hr/>
 
-                    <label className="option option--inline">
-                        <div className="option__control">
-                            <input name="enableExcludeList"
-                                type="checkbox"
-                                checked={ this.state.options?.enableExcludeList }
-                                onChange={ this.handleInputChange } />
-                        </div>
-                        <div className="option__label">
-                            { _("optionsEnableExcludeListLabel") }
-                        </div>
+                            <label className="option option--inline">
+                                <div className="option__control">
+                                    <input name="enableExcludeList"
+                                        type="checkbox"
+                                        checked={ this.state.options?.enableExcludeList }
+                                        onChange={ this.handleInputChange } />
+                                </div>
+                                <div className="option__label">
+                                    { _("optionsEnableExcludeListLabel") }
+                                </div>
 
-                        <label className="option">
-                            <div className="option__label">
-                                { _("optionsExcludeListLabel") }
-                            </div>
-                            <div className="option__description">
-                                { _("optionsExcludeListDescription") }
-                            </div>
-                            <div className="option__control">
-                                <textarea name="excludeList"
-                                        onChange={ this.handleExcludeListChange }
-                                        value={ this.state.options.excludeList.join("\n") }
-                                        rows={8}>
-                                </textarea>
-                            </div>
-                        </label>
-                    </label>
+                                <label className="option">
+                                    <div className="option__label">
+                                        { _("optionsExcludeListLabel") }
+                                    </div>
+                                    <div className="option__description">
+                                        { _("optionsExcludeListDescription") }
+                                    </div>
+                                    <div className="option__control">
+                                        <textarea name="excludeList"
+                                                onChange={ this.handleExcludeListChange }
+                                                value={ this.state.options.excludeList.join("\n") }
+                                                rows={8}>
+                                        </textarea>
+                                    </div>
+                                </label>
+                            </label>
+                        </> }
 
                 </> }
 
