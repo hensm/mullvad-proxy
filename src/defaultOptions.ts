@@ -1,6 +1,16 @@
 "use strict";
 
-import { Options } from "./lib/options";
+export interface Options {
+    autoConnect: boolean;
+    rememberConnectedServer: boolean;
+    proxyDns: boolean;
+    enableNotifications: boolean;
+    enableNotificationsOnlyErrors: boolean;
+    enableIpv6Lookups: boolean;
+    enableDebugInfo: boolean;
+    enableExcludeList: boolean;
+    excludeList: string[];
+}
 
 export default {
     autoConnect: false,

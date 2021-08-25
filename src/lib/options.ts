@@ -1,6 +1,6 @@
 "use strict";
 
-import defaultOptions from "../defaultOptions";
+import defaultOptions, { Options } from "../defaultOptions";
 
 import logger from "./logger";
 
@@ -11,17 +11,7 @@ const storageArea = new TypedStorageArea<{
     options: Options;
 }>(browser.storage.sync);
 
-export interface Options {
-    autoConnect: boolean;
-    rememberConnectedServer: boolean;
-    proxyDns: boolean;
-    enableNotifications: boolean;
-    enableNotificationsOnlyErrors: boolean;
-    enableIpv6Lookups: boolean;
-    enableDebugInfo: boolean;
-    enableExcludeList: boolean;
-    excludeList: string[];
-}
+export { Options };
 
 interface EventMap {
     changed: Array<keyof Options>;
