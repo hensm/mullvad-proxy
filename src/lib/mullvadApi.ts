@@ -55,42 +55,6 @@ export function getFullSocksHost(serverName: string) {
 // am.i.mullvad
 export const CHECK_URL = "https://mullvad.net/check";
 
-export const COUNTRY_NAME_MAP: { [k: string]: string } = {
-    Austria: "at",
-    Australia: "au",
-    Belgium: "be",
-    Bulgaria: "bg",
-    Brazil: "br",
-    Canada: "ca",
-    Switzerland: "ch",
-    Czechia: "cz",
-    Germany: "de",
-    Denmark: "dk",
-    Spain: "es",
-    Finland: "fi",
-    France: "fr",
-    "United Kingdom": "gb",
-    "Hong Kong": "hk",
-    Hungary: "hu",
-    Ireland: "ie",
-    Italy: "it",
-    Japan: "jp",
-    Luxembourg: "lu",
-    Latvia: "lv",
-    "Republic of Moldova": "md",
-    "North Macedonia": "mk",
-    Netherlands: "nl",
-    Norway: "no",
-    "New Zealand": "nz",
-    Poland: "pl",
-    Portugal: "pt",
-    Romania: "ro",
-    Serbia: "rs",
-    Sweden: "se",
-    Singapore: "sg",
-    "United States": "us"
-};
-
 export interface ConnectionDetails {
     ip: string;
     country: string;

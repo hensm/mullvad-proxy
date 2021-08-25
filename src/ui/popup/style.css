@@ -6,6 +6,7 @@ body {
 .svg-wrapper {
     height: 100%;
     left: 0;
+    opacity: 0.5;
     overflow: hidden;
     pointer-events: none;
     position: absolute;

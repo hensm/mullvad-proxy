@@ -87,7 +87,7 @@ class PopupApp extends React.Component<{}, PopupAppState> {
             const wrapperRect = svgWrapper.getBoundingClientRect();
             const svgRect = svgElement.getBoundingClientRect();
 
-            for (const path of svgElement.children) {
+            for (const path of svgElement.getElementsByTagName("path")) {
                 const pathRect = path.getBoundingClientRect();
 
                 // Normalize
@@ -118,13 +118,14 @@ class PopupApp extends React.Component<{}, PopupAppState> {
         this.onOptionsPanelOpen = this.onOptionsPanelOpen.bind(this);
     }
 
-    private focusCountry(countryCode: string) {
-        if (!this.pathOffsets.has(countryCode)) {
+    private focusCountry(countryCode?: string) {
+        // If path offsets aren't found, focus on Sweden?
+        if (!countryCode || !this.pathOffsets.has(countryCode)) {
+            this.focusCountry("se");
             return;
         }
 
         const [translateX, translateY] = this.pathOffsets.get(countryCode)!;
-
         this.svgElement.style.transform = `translate(${translateX}px, ${translateY}px)`;
 
         // Disable animation if reduced motion requested
@@ -550,7 +551,7 @@ class PopupApp extends React.Component<{}, PopupAppState> {
                 this.state.proxy?.host === mullvadApi.SOCKS_ADDRESS) ||
             this.state.proxy?.host === mullvadApi.SOCKS_ADDRESS_WG
         ) {
-            matchingCountry = mullvadApi.COUNTRY_NAME_MAP[details.country];
+            matchingCountry = details.mullvad_exit_ip_hostname?.slice(0, 2);
         }
 
         this.setState(
@@ -562,11 +563,10 @@ class PopupApp extends React.Component<{}, PopupAppState> {
             },
             () => {
                 if (this.state.connectionDetails) {
-                    this.focusCountry(
-                        mullvadApi.COUNTRY_NAME_MAP[
-                            this.state.connectionDetails.country
-                        ]
-                    );
+                    const { mullvad_exit_ip_hostname } =
+                        this.state.connectionDetails;
+
+                    this.focusCountry(mullvad_exit_ip_hostname?.slice(0, 2));
 
                     port.postMessage({
                         subject: "background:/updateConnectionDetails",
