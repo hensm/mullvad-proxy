@@ -7,10 +7,9 @@
     --mullvad-logo-brown: #d2943b;
     --mullvad-logo-beige: #ffcd86;
 
-    --system-font: system-ui
-          , -apple-system, BlinkMacSystemFont
-          , "Segoe UI", Robot, Helvetica, Arial, sans-serif
-          , "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+    --system-font: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI",
+        Robot, Helvetica, Arial, sans-serif, "Apple Color Emoji",
+        "Segoe UI Emoji", "Segoe UI Symbol";
 }
 
 html {
@@ -40,7 +39,6 @@ body {
     position: relative;
     z-index: -1;
 }
-
 
 /* Widgets */
 
@@ -89,13 +87,11 @@ optgroup {
     background-color: rgb(57, 80, 105);
 }
 
-
 .control__disconnect {
     --background-normal: rgb(145, 41, 38);
     --background-hover: rgb(165, 61, 58);
     --background-active: rgb(175, 71, 68);
 }
-
 
 input[type="text"],
 input[type="checkbox"],

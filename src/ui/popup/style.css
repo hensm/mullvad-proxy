@@ -30,10 +30,13 @@ body {
 }
 
 @keyframes loader {
-  from { transform: rotate(0deg); }
-    to { transform: rotate(360deg); }
+    from {
+        transform: rotate(0deg);
+    }
+    to {
+        transform: rotate(360deg);
+    }
 }
-
 
 .connection {
     align-items: start;
@@ -124,7 +127,6 @@ body {
     font-size: 0.85em;
 }
 
-
 .selection,
 .control {
     border: initial;
@@ -151,7 +153,6 @@ body {
     margin-inline-start: auto;
 }
 
-
 .control {
     display: flex;
     gap: 10px;
@@ -164,7 +165,8 @@ body {
 
 /* Panel */
 
-html, body {
+html,
+body {
     max-height: 100%;
     overflow: hidden;
 }
@@ -195,7 +197,7 @@ html, body {
 
 @media (prefers-reduced-motion: reduced) {
     .panel {
-        transition: initial !important
+        transition: initial !important;
     }
 }
 

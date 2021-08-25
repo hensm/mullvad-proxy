@@ -7,9 +7,8 @@ import logger from "./logger";
 import { TypedEventTarget } from "./TypedEventTarget";
 import { TypedStorageArea } from "./TypedStorageArea";
 
-
 const storageArea = new TypedStorageArea<{
-    options: Options
+    options: Options;
 }>(browser.storage.sync);
 
 export interface Options {
@@ -24,14 +23,13 @@ export interface Options {
     excludeList: string[];
 }
 
-
 interface EventMap {
-    "changed": Array<keyof Options>;
+    changed: Array<keyof Options>;
 }
 
 // tslint:disable-next-line:new-parens
-export default new class extends TypedEventTarget<EventMap> {
-    constructor () {
+export default new (class extends TypedEventTarget<EventMap> {
+    constructor() {
         super();
         this.onStorageChanged = this.onStorageChanged.bind(this);
         browser.storage.onChanged.addListener(this.onStorageChanged);
@@ -43,9 +41,9 @@ export default new class extends TypedEventTarget<EventMap> {
     }
 
     private onStorageChanged(
-            changes: { [key: string]: browser.storage.StorageChange }
-          , areaName: string) {
-
+        changes: { [key: string]: browser.storage.StorageChange },
+        areaName: string
+    ) {
         if (areaName !== "sync") {
             return;
         }
@@ -70,11 +68,16 @@ export default new class extends TypedEventTarget<EventMap> {
                     }
 
                     // Array comparison
-                    if (oldKeyValue instanceof Array
-                        && newKeyValue instanceof Array) {
-                        if (oldKeyValue.length === newKeyValue.length
-                            && oldKeyValue.every((value, index) =>
-                                value === newKeyValue[index])) {
+                    if (
+                        oldKeyValue instanceof Array &&
+                        newKeyValue instanceof Array
+                    ) {
+                        if (
+                            oldKeyValue.length === newKeyValue.length &&
+                            oldKeyValue.every(
+                                (value, index) => value === newKeyValue[index]
+                            )
+                        ) {
                             continue;
                         }
                     }
@@ -83,9 +86,11 @@ export default new class extends TypedEventTarget<EventMap> {
                 changedKeys.push(key);
             }
 
-            this.dispatchEvent(new CustomEvent("changed", {
-                detail: changedKeys as Array<keyof Options>
-            }));
+            this.dispatchEvent(
+                new CustomEvent("changed", {
+                    detail: changedKeys as Array<keyof Options>
+                })
+            );
         }
     }
 
@@ -93,7 +98,7 @@ export default new class extends TypedEventTarget<EventMap> {
      * Fetches `options` key from storage and returns it as
      * Options interface type.
      */
-    public async getAll (): Promise<Options> {
+    public async getAll(): Promise<Options> {
         const { options } = await storageArea.get("options");
         return options;
     }
@@ -103,7 +108,7 @@ export default new class extends TypedEventTarget<EventMap> {
      * If no options provided, uses default options.
      * Returns storage promise.
      */
-    public async setAll (options = defaultOptions): Promise<void> {
+    public async setAll(options = defaultOptions): Promise<void> {
         return storageArea.set({ options });
     }
 
@@ -125,22 +130,21 @@ export default new class extends TypedEventTarget<EventMap> {
      * Sets specific option to storage. Returns storage
      * promise.
      */
-    public async set<T extends keyof Options> (
-        name: T
-        , value: Options[T]): Promise<void> {
-
+    public async set<T extends keyof Options>(
+        name: T,
+        value: Options[T]
+    ): Promise<void> {
         const options = await this.getAll();
         options[name] = value;
         return this.setAll(options);
     }
-
 
     /**
      * Gets existing options from storage and compares it
      * against defaults. Any options in defaults and not in
      * storage are set. Does not override any existing options.
      */
-    public async update (defaults = defaultOptions): Promise<void> {
+    public async update(defaults = defaultOptions): Promise<void> {
         const newOpts = await this.getAll();
 
         // If options not found on update, set defaults
@@ -158,4 +162,4 @@ export default new class extends TypedEventTarget<EventMap> {
         // Update storage with default values of new options
         return this.setAll(newOpts);
     }
-};
+})();

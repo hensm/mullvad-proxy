@@ -10,7 +10,7 @@ export class TypedPort<T> {
     public error?: { message: string };
     public sender?: browser.runtime.MessageSender;
 
-    constructor (port: browser.runtime.Port) {
+    constructor(port: browser.runtime.Port) {
         portMap.set(this, port);
         this.name = port.name;
 
@@ -18,36 +18,37 @@ export class TypedPort<T> {
         this.error = null;
     }
 
-    public disconnect () {
+    public disconnect() {
         portMap.get(this)?.disconnect();
     }
 
     public onDisconnect = {
         addListener: (cb: (port: TypedPort<T>) => void) => {
             portMap.get(this)?.onDisconnect.addListener(cb as any);
-        }
-      , removeListener: (cb: (port: TypedPort<T>) => void) => {
+        },
+        removeListener: (cb: (port: TypedPort<T>) => void) => {
             portMap.get(this)?.onDisconnect.addListener(cb as any);
-        }
-      , hasListener: (cb: (port: TypedPort<T>) => void) => {
-            return portMap.get(this)?.onDisconnect.hasListener(cb as any)
-                    ?? false;
+        },
+        hasListener: (cb: (port: TypedPort<T>) => void) => {
+            return (
+                portMap.get(this)?.onDisconnect.hasListener(cb as any) ?? false
+            );
         }
     };
 
     public onMessage = {
         addListener: (cb: (message: T) => void) => {
             portMap.get(this)?.onMessage.addListener(cb as any);
-        }
-      , removeListener: (cb: (message: T) => void) => {
+        },
+        removeListener: (cb: (message: T) => void) => {
             portMap.get(this)?.onMessage.removeListener(cb as any);
-        }
-      , hasListener: (cb: (message: T) => void) => {
+        },
+        hasListener: (cb: (message: T) => void) => {
             return portMap.get(this)?.onMessage.hasListener(cb as any) ?? false;
         }
     };
 
-    public postMessage (message: T) {
+    public postMessage(message: T) {
         portMap.get(this)?.postMessage(message as any);
     }
 }

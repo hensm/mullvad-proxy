@@ -3,36 +3,41 @@
 import { Logger } from "./logger";
 const logger = new Logger("mullvadApi");
 
-
 const AIM_HOST = "am.i.mullvad.net";
 const ENDPOINT_AIM = `https://${AIM_HOST}`;
 const IPV4_ENDPOINT_AIM = `https://ipv4.${AIM_HOST}`;
 const IPV6_ENDPOINT_AIM = `https://ipv6.${AIM_HOST}`;
 
-export enum EndpointVariant { IPv4, IPv6 }
+export enum EndpointVariant {
+    IPv4,
+    IPv6
+}
 
 /**
  * Get /ip and /json endpoints for IPv4/IPv6.
  */
-function getVariantEndpoints (variant: EndpointVariant) {
+function getVariantEndpoints(variant: EndpointVariant) {
     let endpoint;
     switch (variant) {
-        case EndpointVariant.IPv4:  endpoint = IPV4_ENDPOINT_AIM; break;
-        case EndpointVariant.IPv6:  endpoint = IPV6_ENDPOINT_AIM; break;
-        
+        case EndpointVariant.IPv4:
+            endpoint = IPV4_ENDPOINT_AIM;
+            break;
+        case EndpointVariant.IPv6:
+            endpoint = IPV6_ENDPOINT_AIM;
+            break;
+
         default:
             throw new Error("Invalid endpoint variant");
     }
 
     return {
-        endpointAimIp: `${endpoint}/ip`
-      , endpointAimDetails: `${endpoint}/json`
+        endpointAimIp: `${endpoint}/ip`,
+        endpointAimDetails: `${endpoint}/json`
     };
 }
 
 const ENDPOINT_AIM_PORT = `${ENDPOINT_AIM}/port`;
 const ENDPOINT_RELAYS = "https://api.mullvad.net/www/relays/wireguard/";
-
 
 /**
  * Default proxy IP addresses for the current server location
@@ -43,23 +48,45 @@ export const SOCKS_ADDRESS_WG = "10.64.0.1";
 
 export const SOCKS_PORT = "1080";
 
-export function getFullSocksHost (serverName: string) {
+export function getFullSocksHost(serverName: string) {
     return `${serverName}.mullvad.net`;
 }
 
+// am.i.mullvad
+export const CHECK_URL = "https://mullvad.net/check";
 
 export const COUNTRY_NAME_MAP: { [k: string]: string } = {
-    "Austria": "at"              , "Australia": "au"      , "Belgium": "be"
-  , "Bulgaria": "bg"             , "Brazil": "br"         , "Canada": "ca"
-  , "Switzerland": "ch"          , "Czechia": "cz"        , "Germany": "de"
-  , "Denmark": "dk"              , "Spain": "es"          , "Finland": "fi"
-  , "France": "fr"               , "United Kingdom": "gb" , "Hong Kong": "hk"
-  , "Hungary": "hu"              , "Ireland": "ie"        , "Italy": "it"
-  , "Japan": "jp"                , "Luxembourg": "lu"     , "Latvia": "lv"
-  , "Republic of Moldova": "md"  , "Netherlands": "nl"    , "Norway": "no"
-  , "New Zealand": "nz"          , "Poland": "pl"         , "Romania": "ro"
-  , "Serbia": "rs"               , "Sweden": "se"         , "Singapore": "sg"
-  , "United States": "us"
+    Austria: "at",
+    Australia: "au",
+    Belgium: "be",
+    Bulgaria: "bg",
+    Brazil: "br",
+    Canada: "ca",
+    Switzerland: "ch",
+    Czechia: "cz",
+    Germany: "de",
+    Denmark: "dk",
+    Spain: "es",
+    Finland: "fi",
+    France: "fr",
+    "United Kingdom": "gb",
+    "Hong Kong": "hk",
+    Hungary: "hu",
+    Ireland: "ie",
+    Italy: "it",
+    Japan: "jp",
+    Luxembourg: "lu",
+    Latvia: "lv",
+    "Republic of Moldova": "md",
+    Netherlands: "nl",
+    Norway: "no",
+    "New Zealand": "nz",
+    Poland: "pl",
+    Romania: "ro",
+    Serbia: "rs",
+    Sweden: "se",
+    Singapore: "sg",
+    "United States": "us"
 };
 
 export interface ConnectionDetails {
@@ -76,7 +103,7 @@ export interface ConnectionDetails {
             link: string;
             blacklisted: boolean;
         }>;
-    }
+    };
 
     mullvad_exit_ip: boolean;
     mullvad_exit_ip_hostname?: string;
@@ -92,10 +119,10 @@ export interface PortDetails {
 /**
  * Gets public IP address as string.
  */
-export async function fetchIpAddress (
-        variant = EndpointVariant.IPv4
-      , init?: RequestInit) {
-
+export async function fetchIpAddress(
+    variant = EndpointVariant.IPv4,
+    init?: RequestInit
+) {
     logger.info("Fetching IP address...");
 
     const { endpointAimIp } = getVariantEndpoints(variant);
@@ -106,10 +133,10 @@ export async function fetchIpAddress (
 /**
  * Gets connection details JSON.
  */
-export async function fetchConnectionDetails (
-        variant = EndpointVariant.IPv4
-      , init?: RequestInit) {
-
+export async function fetchConnectionDetails(
+    variant = EndpointVariant.IPv4,
+    init?: RequestInit
+) {
     logger.info("Fetching connection details...");
 
     const { endpointAimDetails } = getVariantEndpoints(variant);
@@ -125,7 +152,7 @@ export async function fetchConnectionDetails (
 /**
  * Gets port details JSON.
  */
-export async function fetchPortDetails (port: number, init?: RequestInit) {
+export async function fetchPortDetails(port: number, init?: RequestInit) {
     if (port < 1 || port > 65536) {
         throw new Error("Invalid port!");
     }
@@ -143,7 +170,6 @@ export async function fetchPortDetails (port: number, init?: RequestInit) {
 
     return json as PortDetails;
 }
-
 
 export interface Server {
     hostname: string;
@@ -164,7 +190,7 @@ export interface Server {
 /**
  * Gets Mullvad WireGuard server list.
  */
-export async function fetchServerList (init?: RequestInit) {
+export async function fetchServerList(init?: RequestInit) {
     logger.info("Fetching server list...");
 
     let json;
@@ -179,6 +205,6 @@ export async function fetchServerList (init?: RequestInit) {
     return json as Server[];
 }
 
-export function getServerIdFromHost (hostname: string) {
+export function getServerIdFromHost(hostname: string) {
     return parseInt(hostname.slice(2, hostname.indexOf("-")));
 }

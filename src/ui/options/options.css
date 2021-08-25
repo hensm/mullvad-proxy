@@ -49,13 +49,11 @@
     width: 100%;
 }
 
-
 .option__description {
     width: 100%;
     font-size: 0.85em;
     opacity: 0.75;
 }
-
 
 .buttons {
     display: flex;

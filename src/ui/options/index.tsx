@@ -7,5 +7,4 @@ import { OptionsView } from "./OptionsView";
 
 import "./injectStyle";
 
-
 ReactDOM.render(<OptionsView />, document.body);
