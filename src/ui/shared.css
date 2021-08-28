@@ -65,8 +65,8 @@ select:hover:not(:disabled) {
     background-color: var(--background-hover);
 }
 
-button:hover:active,
-select:hover:active {
+button:hover:active:not(:disabled),
+select:hover:active:not(:disabled) {
     background-color: var(--background-active);
 }
 
