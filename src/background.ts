@@ -286,10 +286,10 @@ async function disableProxy(notify = false) {
     proxyAbortController = new AbortController();
 }
 
-function updateBadgeText(countryCode: string) {
+function updateBadgeText(countryCode?: string) {
     if (proxy && !proxyConnecting) {
         browser.browserAction.setBadgeText({
-            text: countryCode.toUpperCase()
+            text: countryCode?.toUpperCase() ?? ""
         });
     }
 }
@@ -350,7 +350,7 @@ messages.onConnect.addListener(port => {
 
             case "background:/updateConnectionDetails": {
                 updateBadgeText(
-                    mullvadApi.COUNTRY_NAME_MAP[message.data.details.country]
+                    message.data.details.mullvad_exit_ip_hostname?.slice(0, 2)
                 );
                 break;
             }
@@ -419,7 +419,7 @@ async function init() {
 
             await enableProxy(currentRegionProxyHost, connectionDetails);
             updateBadgeText(
-                mullvadApi.COUNTRY_NAME_MAP[connectionDetails.country]
+                connectionDetails.mullvad_exit_ip_hostname?.slice(0, 2)
             );
         }
     }
