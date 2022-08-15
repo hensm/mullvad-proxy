@@ -49,7 +49,17 @@ export const SOCKS_ADDRESS_WG = "10.64.0.1";
 export const SOCKS_PORT = "1080";
 
 export function getFullSocksHost(serverName: string) {
+    if (serverName.endsWith("mullvad.net")) {
+        return serverName;
+    }
+
     return `${serverName}.mullvad.net`;
+}
+
+export function getShortSocksName(socksName: string) {
+    if (socksName.endsWith(".socks5.relays.mullvad.net")) {
+        return socksName.slice(0, -26);
+    }
 }
 
 // am.i.mullvad
@@ -130,8 +140,7 @@ export async function fetchPortDetails(port: number, init?: RequestInit) {
         const res = await fetch(`${ENDPOINT_AIM_PORT}/${port}`, init);
         json = await res.json();
     } catch (err) {
-        logger.error(err);
-        throw new Error("Failed to get port details.");
+        throw logger.error("Failed to fetch port details", err);
     }
 
     return json as PortDetails;
@@ -164,8 +173,7 @@ export async function fetchServerList(init?: RequestInit) {
         const res = await fetch(ENDPOINT_RELAYS, init);
         json = await res.json();
     } catch (err) {
-        logger.error(err);
-        throw new Error("Failed to get relays.");
+        throw logger.error("Failed to fetch server list", err);
     }
 
     return json as Server[];

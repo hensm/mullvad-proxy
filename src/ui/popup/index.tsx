@@ -382,7 +382,11 @@ class PopupApp extends React.Component<{}, PopupAppState> {
                         >
                             {this.state.recentServers.map(server => (
                                 <option value={server.socks_name}>
-                                    {server.country_name} ({server.socks_name})
+                                    {server.country_name} (
+                                    {mullvadApi.getShortSocksName(
+                                        server.socks_name
+                                    )}
+                                    )
                                 </option>
                             ))}
                         </optgroup>
@@ -418,7 +422,10 @@ class PopupApp extends React.Component<{}, PopupAppState> {
                             ?.get(this.state.selectedCountry)
                             ?.map((server, i) => (
                                 <option value={server.socks_name} key={i}>
-                                    {server.socks_name} ({server.city_name})
+                                    {mullvadApi.getShortSocksName(
+                                        server.socks_name
+                                    )}{" "}
+                                    ({server.city_name})
                                 </option>
                             ))}
                 </select>
