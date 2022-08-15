@@ -1,52 +1,44 @@
 {
-    "name": "__MSG_extensionName__"
-  , "description": "__MSG_extensionDescription__"
-  , "version": "0.2.3"
+    "name": "__MSG_extensionName__",
+    "description": "__MSG_extensionDescription__",
+    "version": "0.2.3",
 
-  , "default_locale": "en"
-  , "manifest_version": 2
+    "default_locale": "en",
+    "manifest_version": 2,
 
-  , "developer": {
-        "name": "Matt Hensman <m@matt.tf>"
-      , "url": "https://matt.tf"
-    }
+    "developer": {
+        "name": "Matt Hensman <m@matt.tf>",
+        "url": "https://matt.tf"
+    },
 
-  , "browser_specific_settings": {
+    "browser_specific_settings": {
         "gecko": {
-            "id": "mullvad@matt.tf"
-          , "strict_min_version": "91.1.0"
+            "id": "mullvad@matt.tf",
+            "strict_min_version": "91.1.0"
         }
-    }
+    },
 
-  , "browser_action": {
+    "browser_action": {
         "default_icon": {
-            "16": "icons/unlocked-16.png"
-          , "24": "icons/unlocked-24.png"
-          , "32": "icons/unlocked-32.png"
-        }
-      , "default_popup": "ui/popup/index.html"
-    }
+            "16": "icons/unlocked-16.png",
+            "24": "icons/unlocked-24.png",
+            "32": "icons/unlocked-32.png"
+        },
+        "default_popup": "ui/popup/index.html"
+    },
 
-  , "background": {
-        "scripts": [
-            "browser-polyfill.min.js"
-          , "background.bundle.js"
-        ]
-    }
+    "background": {
+        "scripts": ["browser-polyfill.min.js", "background.bundle.js"]
+    },
 
-  , "icons": {
-        "48": "icons/locked-48.png"
-      , "96": "icons/locked-96.png"
-    }
+    "icons": {
+        "48": "icons/locked-48.png",
+        "96": "icons/locked-96.png"
+    },
 
-  , "options_ui": {
+    "options_ui": {
         "page": "ui/options/index.html"
-    }
+    },
 
-  , "permissions": [
-        "proxy"
-      , "notifications"
-      , "storage"
-      , "<all_urls>"
-    ]
+    "permissions": ["proxy", "notifications", "storage", "<all_urls>"]
 }
