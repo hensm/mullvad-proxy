@@ -1,16 +1,16 @@
 {
     "compilerOptions": {
-        "esModuleInterop": true
-      , "jsx": "react"
-      , "lib": [ "ESNext", "DOM", "DOM.Iterable" ]
-      , "module": "commonjs"
-      , "moduleResolution": "node"
-      , "noImplicitAny": true
-      , "noUnusedParameters": true
-      , "removeComments": true
-      , "resolveJsonModule": true
-      , "sourceMap": true
-      , "strict": true
-      , "target": "es6"
+        "esModuleInterop": true,
+        "jsx": "react",
+        "lib": ["ESNext", "DOM", "DOM.Iterable"],
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "noImplicitAny": true,
+        "noUnusedParameters": true,
+        "removeComments": true,
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "strict": true,
+        "target": "es6"
     }
 }

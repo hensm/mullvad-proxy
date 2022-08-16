@@ -1,226 +1,224 @@
 {
     "extensionName": {
-        "message": "Mullvad Proxy (unofficial)"
-      , "description": "Name of extension."
-    }
-  , "extensionDescription": {
-        "message": "Connect to a range of Mullvad proxies without manual configuration."
-      , "description": "Description of extension."
-    }
+        "message": "Mullvad Proxy (unofficial)",
+        "description": "Name of extension."
+    },
+    "extensionDescription": {
+        "message": "Connect to a range of Mullvad proxies without manual configuration.",
+        "description": "Description of extension."
+    },
 
-
-  , "notificationConnectionFailedTitle": {
-        "message": "Proxy Connection Failed"
-      , "description": "Title for notification if proxy connection fails."
-    }
-  , "notificationConnectionFailedMessage": {
-        "message": "Could not connect to $host$."
-      , "description": "Message body for notification if proxy connection fails."
-      , "placeholders": {
+    "notificationConnectionFailedTitle": {
+        "message": "Proxy Connection Failed",
+        "description": "Title for notification if proxy connection fails."
+    },
+    "notificationConnectionFailedMessage": {
+        "message": "Could not connect to $host$.",
+        "description": "Message body for notification if proxy connection fails.",
+        "placeholders": {
             "host": {
-                "content": "$1"
-              , "example": "se1-wg.socks5.mullvad.net"
+                "content": "$1",
+                "example": "se1-wg.socks5.mullvad.net"
             }
         }
-    }
+    },
 
-  , "notificationConnectionFailedMessageNonMullvad": {
-        "message": "Not connected to Mullvad VPN."
-      , "description": "Message body for notification if proxy connection fails because client is not connected to Mullvad network."
-    }
+    "notificationConnectionFailedMessageNonMullvad": {
+        "message": "Not connected to Mullvad VPN.",
+        "description": "Message body for notification if proxy connection fails because client is not connected to Mullvad network."
+    },
 
-  , "notificationConnectionSucceededTitle": {
-        "message": "Proxy Connected"
-      , "description": "Title for notification if proxy connection succeeds."
-    }
-  , "notificationConnectionSucceededMessage": {
-        "message": "Connected to $host$."
-      , "description": "Message body for notification if proxy connection succeeds."
-      , "placeholders": {
+    "notificationConnectionSucceededTitle": {
+        "message": "Proxy Connected",
+        "description": "Title for notification if proxy connection succeeds."
+    },
+    "notificationConnectionSucceededMessage": {
+        "message": "Connected to $host$.",
+        "description": "Message body for notification if proxy connection succeeds.",
+        "placeholders": {
             "host": {
-                "content": "$1"
-              , "example": "se1-wg.socks5.mullvad.net"
+                "content": "$1",
+                "example": "se1-wg.socks5.mullvad.net"
             }
         }
-    }
+    },
 
-  , "notificationConnectionDisconnectedTitle": {
-        "message": "Disconnected"
-      , "description": "Title for notification when proxy is disconnected."
-    }
-  , "notificationConnectionDisconnectedMessage": {
-        "message": "Disconnected from $host$."
-      , "description": "Message body for notification when proxy is disconnected."
-      , "placeholders": {
+    "notificationConnectionDisconnectedTitle": {
+        "message": "Disconnected",
+        "description": "Title for notification when proxy is disconnected."
+    },
+    "notificationConnectionDisconnectedMessage": {
+        "message": "Disconnected from $host$.",
+        "description": "Message body for notification when proxy is disconnected.",
+        "placeholders": {
             "host": {
-                "content": "$1"
-              , "example": "se1-wg.socks5.mullvad.net"
+                "content": "$1",
+                "example": "se1-wg.socks5.mullvad.net"
             }
         }
-    }
+    },
 
+    "popupLoading": {
+        "message": "Loading",
+        "description": "Displayed in place of content whilst loading."
+    },
 
-  , "popupLoading": {
-        "message": "Loading"
-      , "description": "Displayed in place of content whilst loading."
-    }
+    "popupConnectionStatusConnected": {
+        "message": "Connected",
+        "description": "Connection status displayed whilst connected to a proxy server."
+    },
+    "popupConnectionStatusConnecting": {
+        "message": "Connecting",
+        "description": "Connection status displayed whilst connecting to a proxy."
+    },
+    "popupConnectionStatusNotConnected": {
+        "message": "Not Connected",
+        "description": "Connection status displayed whilst not connected to a proxy server."
+    },
 
-  , "popupConnectionStatusConnected": {
-        "message": "Connected"
-      , "description": "Connection status displayed whilst connected to a proxy server."
-    }
-  , "popupConnectionStatusConnecting": {
-        "message": "Connecting"
-      , "description": "Connection status displayed whilst connecting to a proxy."
-    }
-  , "popupConnectionStatusNotConnected": {
-        "message": "Not Connected"
-      , "description": "Connection status displayed whilst not connected to a proxy server."
-    }
-  
-  , "popupConnectionTypeWireGuard": {
-          "message": "SOCKS5 via WireGuard"
-        , "description": "Title text for connection info item."
-      }
-  , "popupConnectionTypeOpenVPN": {
-        "message": "SOCKS5 via OpenVPN"
-      , "description": "Title text for connection info item."
-    }
+    "popupConnectionTypeWireGuard": {
+        "message": "SOCKS5 via WireGuard",
+        "description": "Title text for connection info item."
+    },
+    "popupConnectionTypeOpenVPN": {
+        "message": "SOCKS5 via OpenVPN",
+        "description": "Title text for connection info item."
+    },
 
-  , "popupConnectionIpv4Title": {
-        "message": "IPv4 address"
-      , "description": "Title popup on IPv4 address"
-    }
-  , "popupConnectionIpv6Title": {
-        "message": "IPv6 address"
-      , "description": "Title popup on IPv6 address"
-    }
+    "popupConnectionIpv4Title": {
+        "message": "IPv4 address",
+        "description": "Title popup on IPv4 address"
+    },
+    "popupConnectionIpv6Title": {
+        "message": "IPv6 address",
+        "description": "Title popup on IPv6 address"
+    },
 
-  , "popupSelectionCountryPlaceholder": {
-        "message": "Select country"
-      , "description": "Placeholder text for country combo box."
-    }
-  , "popupSelectionCountryRecentServers": {
-        "message": "Recently used"
-      , "description": "Optgroup title within country selection"
-    }
-  , "popupSelectionServerPlaceholder": {
-        "message": "Select server"
-      , "description": "Placeholder text for server combo box."
-    }
-  , "popupSelectionConnect": {
-        "message": "Connect"
-      , "description": "Proxy server connect button text."
-    }
+    "popupSelectionCountryPlaceholder": {
+        "message": "Select country",
+        "description": "Placeholder text for country combo box."
+    },
+    "popupSelectionCountryRecentServers": {
+        "message": "Recently used",
+        "description": "Optgroup title within country selection"
+    },
+    "popupSelectionServerPlaceholder": {
+        "message": "Select server",
+        "description": "Placeholder text for server combo box."
+    },
+    "popupSelectionConnect": {
+        "message": "Connect",
+        "description": "Proxy server connect button text."
+    },
 
-  , "popupConnect": {
-        "message": "Connect"
-      , "description": "Proxy server connect button (only displayed whilst not connected via WireGuard) text."
-    }
-  , "popupDisconnect": {
-        "message": "Disconnect"
-      , "description": "Proxy server disconnect button text."
-    }
-  , "popupReconnect": {
-        "message": "Reconnect"
-      , "description": "Proxy server reconnect button text."
-    }
+    "popupConnect": {
+        "message": "Connect",
+        "description": "Proxy server connect button (only displayed whilst not connected via WireGuard) text."
+    },
+    "popupDisconnect": {
+        "message": "Disconnect",
+        "description": "Proxy server disconnect button text."
+    },
+    "popupReconnect": {
+        "message": "Reconnect",
+        "description": "Proxy server reconnect button text."
+    },
 
-  , "optionsPanelTitle": {
-        "message": "Options"
-      , "description": "Popup options panel header title."
-    }
-  , "optionsPanelViewInTab": {
-        "message": "View in tab"
-      , "description": "Popup options panel header tab button"
-    }
-  , "optionsPanelClose": {
-        "message": "Close"
-      , "description": "Popup options panel header close button"
-    }
+    "optionsPanelTitle": {
+        "message": "Options",
+        "description": "Popup options panel header title."
+    },
+    "optionsPanelViewInTab": {
+        "message": "View in tab",
+        "description": "Popup options panel header tab button"
+    },
+    "optionsPanelClose": {
+        "message": "Close",
+        "description": "Popup options panel header close button"
+    },
 
-  , "optionsPanelOpen": {
-        "message": "Options"
-      , "description": "Popup options button title."
-    }
+    "optionsPanelOpen": {
+        "message": "Options",
+        "description": "Popup options button title."
+    },
 
-  , "optionsAutoConnectLabel": {
-        "message": "Auto-connect"
-      , "description": "Auto-connect option label."
-    }
-  , "optionsAutoConnectDescription": {
-        "message": "When the extension is first loaded, connect automatically to either the current region's proxy or the last remembered connected server (if enabled)."
-      , "description": "Auto-connect option description."
-    }
+    "optionsAutoConnectLabel": {
+        "message": "Auto-connect",
+        "description": "Auto-connect option label."
+    },
+    "optionsAutoConnectDescription": {
+        "message": "When the extension is first loaded, connect automatically to either the current region's proxy or the last remembered connected server (if enabled).",
+        "description": "Auto-connect option description."
+    },
 
-  , "optionsRememberConnectedServerLabel": {
-        "message": "Remember connected server"
-      , "description": "Remember connected server option label."
-    }
-  , "optionsRememberConnectedServerDescription": {
-        "message": "Restore proxy settings after browser/extension restarts."
-      , "description": "Remember connected server option description."
-    }
+    "optionsRememberConnectedServerLabel": {
+        "message": "Remember connected server",
+        "description": "Remember connected server option label."
+    },
+    "optionsRememberConnectedServerDescription": {
+        "message": "Restore proxy settings after browser/extension restarts.",
+        "description": "Remember connected server option description."
+    },
 
-  , "optionsProxyDnsLabel": {
-        "message": "Proxy DNS"
-      , "description": "Proxy DNS option label."
-    }
-  , "optionsProxyDnsDescription": {
-        "message": "Hide system DNS servers by resolving DNS queries on the proxy server."
-      , "description": "Proxy DNS option description."
-    }
+    "optionsProxyDnsLabel": {
+        "message": "Proxy DNS",
+        "description": "Proxy DNS option label."
+    },
+    "optionsProxyDnsDescription": {
+        "message": "Hide system DNS servers by resolving DNS queries on the proxy server.",
+        "description": "Proxy DNS option description."
+    },
 
-  , "optionsEnableNotificationsLabel": {
-        "message": "Enable notifications"
-      , "description": "Enable notifications option label."
-    }
-  , "optionsEnableNotificationsDescription": {
-        "message": "Show notifications when the connection state changes or if a connection error occurs."
-      , "description": "Enable notifications option description."
-    }
-  , "optionsEnableNotificationsOnlyErrorsLabel": {
-        "message": "Only show for errors"
-      , "description": "Enable only error notifications option label."
-    }
+    "optionsEnableNotificationsLabel": {
+        "message": "Enable notifications",
+        "description": "Enable notifications option label."
+    },
+    "optionsEnableNotificationsDescription": {
+        "message": "Show notifications when the connection state changes or if a connection error occurs.",
+        "description": "Enable notifications option description."
+    },
+    "optionsEnableNotificationsOnlyErrorsLabel": {
+        "message": "Only show for errors",
+        "description": "Enable only error notifications option label."
+    },
 
-  , "optionsEnableIpv6LookupsLabel": {
-        "message": "Enable IPv6 lookups"
-      , "description": "Enable debug info option label."
-    }
-  , "optionsEnableIpv6LookupsDescription": {
-        "message": "Make additional API request to display public IPv6 address."
-      , "description": "Enable debug info option description."
-    }
+    "optionsEnableIpv6LookupsLabel": {
+        "message": "Enable IPv6 lookups",
+        "description": "Enable debug info option label."
+    },
+    "optionsEnableIpv6LookupsDescription": {
+        "message": "Make additional API request to display public IPv6 address.",
+        "description": "Enable debug info option description."
+    },
 
-  , "optionsEnableDebugInfoLabel": {
-        "message": "Enable debug info"
-      , "description": "Enable debug info option label."
-    }
-  , "optionsEnableDebugInfoDescription": {
-        "message": "Show additional connection info and output more detailed logs."
-      , "description": "Enable debug info option description."
-    }
+    "optionsEnableDebugInfoLabel": {
+        "message": "Enable debug info",
+        "description": "Enable debug info option label."
+    },
+    "optionsEnableDebugInfoDescription": {
+        "message": "Show additional connection info and output more detailed logs.",
+        "description": "Enable debug info option description."
+    },
 
-  , "optionsEnableExcludeListLabel": {
-        "message": "Enable exclude list"
-      , "description": "Enable exclude list option label."
-    }
-  , "optionsExcludeListLabel": {
-        "message": "Exclude list"
-      , "description": "Exclude list option label."
-    }
-  , "optionsExcludeListDescription": {
-        "message": "List of newline-delimited hosts for URLs to exclude from proxied requests."
-      , "description": "Exclude list option label."
-    }
+    "optionsEnableExcludeListLabel": {
+        "message": "Enable exclude list",
+        "description": "Enable exclude list option label."
+    },
+    "optionsExcludeListLabel": {
+        "message": "Exclude list",
+        "description": "Exclude list option label."
+    },
+    "optionsExcludeListDescription": {
+        "message": "List of newline-delimited hosts for URLs to exclude from proxied requests.",
+        "description": "Exclude list option label."
+    },
 
-  , "optionsClearCacheLabel": {
-        "message": "Clear cache"
-      , "description": "Label for button that clears API cache"
-    }
-  , "optionsClearRecentServersLabel": {
-        "message": "Clear recent servers"
-      , "description": "Label for button that clears API cache"
+    "optionsClearCacheLabel": {
+        "message": "Clear cache",
+        "description": "Label for button that clears API cache"
+    },
+    "optionsClearRecentServersLabel": {
+        "message": "Clear recent servers",
+        "description": "Label for button that clears API cache"
     }
 }
