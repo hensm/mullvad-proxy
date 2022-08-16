@@ -60,6 +60,7 @@ export function getShortSocksName(socksName: string) {
     if (socksName.endsWith(".socks5.relays.mullvad.net")) {
         return socksName.slice(0, -26);
     }
+    return socksName;
 }
 
 // am.i.mullvad
