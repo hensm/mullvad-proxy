@@ -93,6 +93,7 @@ async function showNotification(createOptions: CreateNotificationOptions) {
 }
 
 let isChromium: boolean;
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 const { chrome } = window as any;
 
 // Current proxy details
@@ -135,6 +136,7 @@ function onProxyRequest(details: browser.proxy._OnRequestDetails) {
     return proxy;
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function onProxyError(...args: any[]) {
     logger.error("Proxy error!", args);
     showNotification(notifConnectionFailed(proxy?.host));
