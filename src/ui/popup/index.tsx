@@ -14,7 +14,7 @@ import localStorage from "../../localStorage";
 import messages, { Message, MessengerPort, ProxyState } from "../../messages";
 
 import logger from "../../lib/logger";
-import options from "../../lib/options";
+import options, { Options } from "../../lib/options";
 
 import * as mullvadApi from "../../lib/mullvadApi";
 import { getMinutesInMs } from "../../lib/utils";
@@ -67,6 +67,14 @@ const PopupApp = () => {
                 "socks through wireguard",
         [connectionDetails]
     );
+
+    const [opts, setOpts] = useState<Options>();
+    useEffect(() => {
+        options.getAll().then(setOpts);
+        options.addEventListener("changed", () => {
+            options.getAll().then(setOpts);
+        });
+    }, []);
 
     useEffect(() => {
         const req = new XMLHttpRequest();
@@ -255,7 +263,7 @@ const PopupApp = () => {
             // Fetch connection details
             const detailsPromise = mullvadApi.fetchConnectionDetails();
 
-            if (await options.get("enableIpv6Lookups")) {
+            if (opts?.enableIpv6Lookups) {
                 // Fetch IPv6 address if available
                 try {
                     setAddress6(
@@ -304,7 +312,7 @@ const PopupApp = () => {
         setSelectedServer(matchingServer?.socks_name);
         setConnectionDetails(details);
         setIsUpdating(false);
-    }, [proxyState?.host]);
+    }, [opts?.enableIpv6Lookups, proxyState?.host]);
 
     useEffect(() => {
         if (!proxyState?.isConnecting && serverMap) {
@@ -404,10 +412,21 @@ const PopupApp = () => {
     }, [connectionDetails, isViaWireguard, selectedCountry, selectedServer]);
 
     const handleDisconnectClick = useCallback(() => {
+        setSelectedCountry(undefined);
+        setSelectedServer(undefined);
         port.postMessage({
             subject: "background:/disconnect"
         });
     }, []);
+
+    useEffect(() => {
+        if (!selectedServer || selectedServer === proxyState?.host) return;
+        options.get("enableQuickConnect").then(isQuickConnectEnabled => {
+            if (isQuickConnectEnabled && selectedServer) {
+                handleConnectClick();
+            }
+        });
+    }, [handleConnectClick, proxyState?.host, selectedServer]);
 
     const onOptionsPanelOpen = useCallback(() => {
         setIsOptionsPanelOpen(true);
@@ -564,7 +583,10 @@ const PopupApp = () => {
                     onChange={handleServerChange}
                 >
                     {/* Server placeholder */}
-                    <option selected={!selectedServer} disabled>
+                    <option
+                        selected={!selectedServer}
+                        disabled={!opts?.enableQuickConnect}
+                    >
                         {_("popupSelectionServerPlaceholder")}
                     </option>
 
@@ -581,19 +603,24 @@ const PopupApp = () => {
                             ))}
                 </select>
 
-                <button
-                    className="selection__connect"
-                    /**
-                     * Enable connect button only if a server that isn't the
-                     * current server is selected.
-                     */
-                    disabled={
-                        !(selectedServer && selectedServer !== proxyState?.host)
-                    }
-                    onClick={handleConnectClick}
-                >
-                    {_("popupSelectionConnect")}
-                </button>
+                {!opts?.enableQuickConnect && (
+                    <button
+                        className="selection__connect"
+                        /**
+                         * Enable connect button only if a server that isn't the
+                         * current server is selected.
+                         */
+                        disabled={
+                            !(
+                                selectedServer &&
+                                selectedServer !== proxyState?.host
+                            )
+                        }
+                        onClick={handleConnectClick}
+                    >
+                        {_("popupSelectionConnect")}
+                    </button>
+                )}
             </fieldset>
         );
     }

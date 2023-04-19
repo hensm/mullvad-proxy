@@ -115,6 +115,23 @@ export const OptionsView = () => {
                         </label>
                     </label>
 
+                    <label className="option option--inline">
+                        <div className="option__control">
+                            <input
+                                name="enableQuickConnect"
+                                type="checkbox"
+                                checked={optionsValues?.enableQuickConnect}
+                                onChange={handleInputChange}
+                            />
+                        </div>
+                        <div className="option__label">
+                            {_("optionsEnableQuickConnectLabel")}
+                        </div>
+                        <div className="option__description">
+                            {_("optionsEnableQuickConnectDescription")}
+                        </div>
+                    </label>
+
                     <hr />
 
                     <label className="option option--inline proxy-dns-option">

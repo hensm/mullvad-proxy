@@ -151,6 +151,14 @@
         "description": "Auto-connect option description."
     },
 
+    "optionsEnableQuickConnectLabel": {
+        "message": "Enable quick connect",
+        "description": "Enable quick connect option label."
+    },
+    "optionsEnableQuickConnectDescription": {
+        "message": "Immediately connect to a server when it's selected."
+    },
+
     "optionsRememberConnectedServerLabel": {
         "message": "Remember connected server",
         "description": "Remember connected server option label."
