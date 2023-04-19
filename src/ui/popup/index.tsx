@@ -83,6 +83,8 @@ const PopupApp = () => {
         wrapperElement.classList.add("svg-wrapper");
         wrapperElement.append(element);
 
+        document.body.append(wrapperElement);
+
         afterFrame(() => {
             const wrapperRect = wrapperElement.getBoundingClientRect();
 
