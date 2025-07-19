@@ -5,8 +5,8 @@
 .options {
     display: flex;
     flex-direction: column;
-    gap: 20px;
-    padding: 20px;
+    gap: 16px;
+    padding: 16px;
 }
 
 .options > hr {
@@ -19,7 +19,7 @@
 .option {
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: 4px;
     pointer-events: none;
 }
 .option.option--inline {
@@ -30,8 +30,8 @@
 
 .option > .option {
     flex-basis: 100%;
-    margin-left: 15px;
-    margin-top: 15px;
+    margin-left: 16px;
+    margin-top: 8px;
 }
 
 .option__control,
@@ -43,7 +43,7 @@
     display: flex;
 }
 .option:not(.option--inline) > .option__control {
-    margin-top: 10px;
+    margin-top: 8px;
 }
 .option__control > input[type="text"] {
     width: 100%;
@@ -51,14 +51,14 @@
 
 .option__description {
     width: 100%;
-    font-size: 0.85em;
+    font-size: 0.9em;
     opacity: 0.75;
 }
 
 .buttons {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 8px;
 }
 
 textarea[name="excludeList"] {
