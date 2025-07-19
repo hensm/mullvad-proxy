@@ -23,5 +23,5 @@ export default {
     enableDebugInfo: false,
     enableExcludeList: false,
     excludeList: [],
-    enableQuickConnect: false
+    enableQuickConnect: true
 } as Options;
